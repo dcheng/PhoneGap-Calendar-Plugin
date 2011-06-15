@@ -9,7 +9,6 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <groupId>com.phonegap.calendar</groupId>
   <artifactId>phoneGapCalendarAPI-it</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>apk</packaging>
@@ -25,14 +24,14 @@
       <artifactId>android-test</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.phonegap.calendar</groupId>
-      <artifactId>phoneGapCalendarAPI</artifactId>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>application</artifactId>
       <type>apk</type>
       <version>1.0-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>com.phonegap.calendar</groupId>
-      <artifactId>phoneGapCalendarAPI</artifactId>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>application</artifactId>
       <type>jar</type>
       <version>1.0-SNAPSHOT</version>
     </dependency>
@@ -43,18 +42,11 @@
         <groupId>com.jayway.maven.plugins.android.generation2</groupId>
         <artifactId>maven-android-plugin</artifactId>
         <configuration>
-          <androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
+        <androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
           <assetsDirectory>${project.basedir}/assets</assetsDirectory>
           <resourceDirectory>${project.basedir}/res</resourceDirectory>
           <nativeLibrariesDirectory>${project.basedir}/src/main/native</nativeLibrariesDirectory>
-          <sdk>
-            <platform>8</platform>
-            <path>/home/sergio/development/android/android-sdk-linux_x86</path>
-          </sdk>
-          <deleteConflictingFiles>true</deleteConflictingFiles>
-          <undeployBeforeDeploy>true</undeployBeforeDeploy>
         </configuration>
-        <extensions>true</extensions>
       </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>

@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package com.phonegap.calendar;
+package com.phonegap.calendar.test;
 
 public final class R {
     public static final class attr {

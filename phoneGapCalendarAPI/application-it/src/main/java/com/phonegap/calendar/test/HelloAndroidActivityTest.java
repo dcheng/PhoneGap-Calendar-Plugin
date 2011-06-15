@@ -1,16 +1,17 @@
 package com.phonegap.calendar.test;
 
 import android.test.ActivityInstrumentationTestCase2;
-import com.phonegap.calendar.*;
 
-public class HelloAndroidActivityTest extends ActivityInstrumentationTestCase2<HelloAndroidActivity> {
+import com.phonegap.calendar.app.ApplicationActivity;
+
+public class HelloAndroidActivityTest extends ActivityInstrumentationTestCase2<ApplicationActivity> {
 
     public HelloAndroidActivityTest() {
-        super(HelloAndroidActivity.class);
+        super(ApplicationActivity.class);
     }
 
     public void testActivity() {
-        HelloAndroidActivity activity = getActivity();
+    	ApplicationActivity activity = getActivity();
         assertNotNull(activity);
     }
 }

@@ -9,19 +9,34 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <groupId>com.phonegap.calendar</groupId>
   <artifactId>application</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>apk</packaging>
   <name>phoneGapCalendarAPI - Application</name>
+
+  <description>Mobile app</description>
 
   <dependencies>
     <dependency>
       <groupId>com.google.android</groupId>
       <artifactId>android</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>CalendarLib</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
+
+<!--default case. acts when no profile selected -->
+	<!-- the application gets installed into the local maven repository so that 
+		the instrumentation test project can use it -->  
   <build>
+    <defaultGoal>install</defaultGoal>
+	<finalName>${project.artifactId}-${project.version}</finalName>
+	<sourceDirectory>${project.basedir}/src</sourceDirectory>
     <plugins>
       <plugin>
         <groupId>com.jayway.maven.plugins.android.generation2</groupId>
@@ -29,16 +44,30 @@
         <configuration>
           <androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
           <assetsDirectory>${project.basedir}/assets</assetsDirectory>
-		<resourceDirectory>${project.basedir}/res</resourceDirectory>
+	      <resourceDirectory>${project.basedir}/res</resourceDirectory>
           <nativeLibrariesDirectory>${project.basedir}/src/main/native</nativeLibrariesDirectory>
-          <sdk>
-            <platform>8</platform>
-             <path>/home/sergio/development/android/android-sdk-linux_x86</path>
-          </sdk>
-          <deleteConflictingFiles>true</deleteConflictingFiles>
-          <undeployBeforeDeploy>true</undeployBeforeDeploy>
+          <genDirectory>${project.basedir}/gen</genDirectory>
+          <package>com.phonegap.calendar.app</package>
+          <!--Physical device, it has to be commented in global repository -->
+<!--	  <device>XXXXXXXXXXXX</device>  -->
         </configuration>
-        <extensions>true</extensions>
+        <executions>
+	  <execution>
+	    <phase>generate-sources</phase>
+	      <goals>
+	        <goal>generate-sources</goal>
+	      </goals>
+	  </execution>
+	  <!-- Sergio deploy, it has to be commented in global repository -->
+	  <execution>
+	    <id>Sergio_deploy</id>
+            <phase>install</phase>
+	    <goals>
+	      <goal>deploy</goal>
+            </goals>
+	  </execution>
+	<!--End Sergio deploy -->
+        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>

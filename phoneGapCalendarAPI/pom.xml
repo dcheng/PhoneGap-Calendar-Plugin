@@ -8,11 +8,21 @@
   <packaging>pom</packaging>
   <name>phoneGapCalendarAPI - Parent</name>
 
-  <modules>
-    <module>application</module>
-    <module>application-it</module>	
-    <!--<module>CalendarLib</module>-->
-  </modules>
+  <description>plugin for adding into Phone Gap Android Calendar native functions by using W3C WEB IDL </description>
+
+  <profiles>
+    <profile>
+      <id>all</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>application</module>
+        <module>application-it</module>	
+        <module>CalendarLib</module>
+      </modules>
+    </profile>
+  </profiles>
 
   <dependencyManagement>
     <dependencies>
@@ -28,16 +38,43 @@
         <version>2.2.1</version>
         <scope>provided</scope>
       </dependency>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.4</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
   <build>
+    <plugins>
+      <!--Skip tests, Set true or false-->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skipTests>true</skipTests>
+        </configuration>
+      </plugin>
+      <!--End Skip tests-->
+    </plugins>
     <pluginManagement>
       <plugins>
         <plugin>
           <groupId>com.jayway.maven.plugins.android.generation2</groupId>
           <artifactId>maven-android-plugin</artifactId>
           <version>2.8.3</version>
+          <configuration>
+            <sdk>
+              <!-- Sergio's android path -->
+			  <path>/home/sergio/development/android/android-sdk-linux_x86</path>
+	     	  <platform>${version.android.api}</platform>
+            </sdk>
+            <deleteConflictingFiles>true</deleteConflictingFiles>
+            <attachSources>true</attachSources>
+            <undeployBeforeDeploy>true</undeployBeforeDeploy>
+          </configuration>
+          <extensions>true</extensions>
         </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
