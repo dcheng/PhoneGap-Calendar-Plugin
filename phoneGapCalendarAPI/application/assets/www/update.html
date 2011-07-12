@@ -1,0 +1,95 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>PhoneGap</title>
+<script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
+<script type="text/javascript" charset="utf-8" src="calendar.js"></script>
+
+
+<script type="text/javascript" charset="utf-8">
+
+	function init(){	
+		adVariables = location.search.substring(1,location.search.length);
+		arrVariables = adVariables.split("&");
+	
+		for (i=0; i<arrVariables.length; i++) {	
+			arrVariableActual = arrVariables[i].split("=");		
+			var evalText =	"document.getElementById(\'input-" + arrVariableActual[0] + "\').value =" + '\"' + decode(arrVariableActual[1]) + '\";';		
+			
+			eval(evalText);	
+		}			
+	}	
+	
+	
+	function decode(str){
+		str = str.replace(/%5C/g,"%5C%5C");		 
+		strDecoded = decodeURIComponent(str);		 
+		strDecoded = strDecoded.replace(/'/g,"\'");		
+
+		return strDecoded
+	}
+	
+	
+	function updateCalendarEvent(){	
+		var event = window.plugins.calendar.create(getProperties());
+		event.save(onSuccess,onError); 
+	}
+	
+	
+	function getProperties(){
+		var properties = [];			
+		if(getValueElement("input-id") != null){properties["id"] = getValueElement("input-id");};
+		if(getValueElement("input-description") != null){properties["description"] = getValueElement("input-description");};
+		if(getValueElement("input-location") != null){properties["location"] = getValueElement("input-location");};
+		if(getValueElement("input-summary") != null){properties["summary"] =getValueElement("input-summary");};
+		if(getValueElement("input-start") != null){properties["start"] = getValueElement("input-start");};
+		if(getValueElement("input-end") != null){properties["end"] = getValueElement("input-end");};
+		if(getValueElement("input-status") != null){properties["status"] = getValueElement("input-status");};
+		if(getValueElement("input-transparency") != null){properties["transparency"] = getValueElement("input-transparency");};	
+		if(getValueElement("input-reminder") != null){properties["reminder"] = getValueElement("input-reminder");};
+		return properties;
+	}
+	
+	function getValueElement(element){		
+		if (document.getElementById(element).value == ""){
+			return null;
+		}else{
+			return  document.getElementById(element).value;
+		}		
+	}
+	
+	function onSuccess() {
+		alert("Calendar Event successfully updated");
+	    window.location.href = "index.html";
+	}
+
+	
+	function onError() {
+	    alert('error updating event');
+	} 
+
+	
+
+  
+</script>
+
+</head>
+<body onload="init();">
+
+	<h1>UPDATE</h1>
+	id:  <input disabled="disabled" id="input-id" type="text">  <br/>
+	description:  <input id="input-description" type="text">  <br/>
+	location: <input id="input-location" type="text">  <br/> 
+	summary: <input id="input-summary" type="text">  <br/> 
+	start: <input id="input-start" type="text">  <br/> 
+	end: <input id="input-end" type="text">  <br/> 
+	status: <input id="input-status" type="text">  <br/>
+	transparency: <input id="input-transparency" type="text">  <br/> 	
+	reminder: <input id="input-reminder" type="text">  <br/> 
+	<input id="button-update"	type="button" value="UPDATE" onclick="updateCalendarEvent();"/> 
+	<hr> 
+
+
+	
+</body>
+</html>

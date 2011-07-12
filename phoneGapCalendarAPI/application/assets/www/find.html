@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>PhoneGap</title>
+<script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
+<script type="text/javascript" charset="utf-8" src="calendar.js"></script>
+
+
+<script type="text/javascript" charset="utf-8">
+ 
+	function findEvents(){	
+		
+		var startAfter = document.getElementById("input-date-after").value;
+		var startBefore = document.getElementById("input-date-before").value;		   	
+		
+		
+		
+		var eventFilter = new CalendarEventfilter(startBefore, startAfter, null, null);
+		var calendarFindOption = new CalendarFindOptions(eventFilter,true);
+		window.plugins.calendar.find(	calendarFindOption,
+										printResult,
+										function(e){log(e)}
+		);  
+	}   
+	    
+
+ 	function printResult(listCalendarEvents) {
+
+		innerHtmlText = getHtmlEvents(listCalendarEvents);
+		document.getElementById("result").innerHTML = innerHtmlText; 
+	}
+
+	function getHtmlEvents(listCalendarEvents) {
+		var htmlText =  "";
+
+		for (var i = 0; i < listCalendarEvents.length;i++){	 		
+			htmlText = htmlText +"<div id='result" + i +"' " + "onclick=\"updateCalendarEvent(\'"+            getUrlForUpdate(listCalendarEvents[i])                          +"\');\"><ul><li>" + getHtmlCalendarEvent(listCalendarEvents[i]);
+			htmlText = htmlText + "</li></ul></div>";			
+		}
+				
+		return htmlText;
+
+	}
+	
+	function getHtmlCalendarEvent(calendarEvent){
+		var htmlText =  calendarEvent.description + "<ul><li>" + "start: " + calendarEvent.start + "</li></ul>";
+		htmlText =  htmlText + "<ul><li>" + "end: " + calendarEvent.end + "</li></ul>";
+		return htmlText;
+	}
+	
+	function getUrlForUpdate(calendarEvent){		
+		var text = "?";
+		for (var property in calendarEvent){			
+			if(typeof calendarEvent[property] == 'string' ){
+				textToEncode = encodeURIComponent(calendarEvent[property]);
+				textToEncode = textToEncode.replace(/'/g,"\\'");
+				text += property + "=" + textToEncode + "&"; 
+			}
+		}
+		text = text.substring(0,text.length -1);
+		return text;		 
+	}
+	
+	function updateCalendarEvent(url){		
+		window.location.href = "update.html" + url;
+	}
+	
+  
+</script>
+</head>
+<body onload="getUrlForUpdate();">
+	<h1>FIND</h1>
+
+	Start Date: <input id="input-date-after" type="text">  <br/>
+	Finish Date: <input	id="input-date-before" type="text"> <br/>
+	<input id="list-dates"	type="button" value="find" onclick="findEvents();"/> <br/>
+	<hr>
+
+	<!-- Place Holder for placing the search -->
+	<div id="result"></div>
+
+	<hr>	
+	
+</body>
+</html>
+
