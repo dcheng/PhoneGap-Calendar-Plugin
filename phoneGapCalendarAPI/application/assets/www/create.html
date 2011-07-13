@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>PhoneGap</title>
+<script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
+<script type="text/javascript" charset="utf-8" src="calendar.js"></script>
+
+
+<script type="text/javascript" charset="utf-8">
+
+	function processNewEvent(){	
+		var event = window.plugins.calendar.create(getProperties());
+		event.save(onSuccess,onError);   
+	}
+	
+	
+	function getProperties(){
+		var properties = [];					
+		if(getValueElement("input-description") != null){properties["description"] = getValueElement("input-description");};
+		if(getValueElement("input-location") != null){properties["location"] = getValueElement("input-location");};
+		if(getValueElement("input-summary") != null){properties["summary"] =getValueElement("input-summary");};
+		if(getValueElement("input-date-start") != null){properties["start"] = getValueElement("input-date-start");};
+		if(getValueElement("input-date-end") != null){properties["end"] = getValueElement("input-date-end");};
+		if(getValueElement("input-status") != null){properties["status"] = getValueElement("input-status");};
+		if(getValueElement("input-transparency") != null){properties["transparency"] = getValueElement("input-transparency");};		
+		return properties;
+	}
+	
+	
+	function getValueElement(element){
+		if (document.getElementById(element).value == ""){
+			return null;
+		}else{
+			return  document.getElementById(element).value;
+		}		
+	}
+	
+	
+	function onSuccess() {
+		alert("Calendar Event successfully created");
+	    window.location.href = "index.html";
+	}
+
+	
+	function onError() {
+	    alert('Error creating calendar event');
+	}
+
+	
+
+  
+</script>
+
+</head>
+<body>
+	<h1>CREATE</h1>
+		
+	description:  <input id="input-description" type="text">  <br/>
+	location: <input id="input-location" type="text">  <br/> 
+	summary: <input id="input-summary" type="text">  <br/> 
+	start: <input id="input-date-start" type="text">  <br/> 
+	end: <input id="input-date-end" type="text">  <br/> 
+	status: <input id="input-status" type="text">  <br/>
+	transparency: <input id="input-transparency" type="text">  <br/> 	
+	reminder: <input id="input-reminder" type="text">  <br/> 
+	<input id="list-dates"	type="button" value="Create" onclick="processNewEvent();"/> <br/>
+	<hr>
+
+
+	
+</body>
+</html>
