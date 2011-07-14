@@ -3,6 +3,7 @@ package com.phonegap.calendar.android.utils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import android.util.Log;
@@ -26,7 +27,7 @@ public class DateUtils {
 		else
 			dformat = new SimpleDateFormat(format);
 		try {
-			date = dformat.parse(dateString);
+				date = dformat.parse(dateString);
 			//its normal having an parsing exception here, for instance, with "No Credit" as string
 		} catch (ParseException parseException) {
 			parseException.printStackTrace();
@@ -47,12 +48,10 @@ public class DateUtils {
 		else
 			dformat = new SimpleDateFormat(format);
 		if (date != null) {
-			dformat.setTimeZone(TimeZone.getTimeZone("UTC"));
 			return dformat.format(date);
 		} else {
 			return "NOT VALID STRING FORMAT";
 		}
 	}
-	
 	
 }

@@ -18,8 +18,8 @@ import com.phonegap.api.PhonegapActivity;
 public abstract class CalendarAccessorCreator {
 
 	
-	private static final boolean TEST_CALENDAR = true;
-	private static final boolean GOOGLE_CALENDAR = false;
+	private static final boolean TEST_CALENDAR = false;
+	private static final boolean GOOGLE_CALENDAR = true;
 	
 	
 	
