@@ -14,16 +14,20 @@ import android.webkit.WebView;
 
 import com.phonegap.api.PhonegapActivity;
 
-
+/**
+ * This abstract class defines an API for communication with Calendar APIS like Google
+ * Yahoo, native apks etc. The class is in charge of creating an instance of a class 
+ * implementing this API. To create the instance there are two options. 
+ * Either Passing a string with the name of the class or use a method to create  a default instance
+ * The implementations of this class must working with JSON for communication with javaScript plugin
+ */
 public abstract class CalendarAccessorCreator {
 
-	
+	/**
+	 * 
+	 */
 	private static final boolean TEST_CALENDAR = false;
 	private static final boolean GOOGLE_CALENDAR = true;
-	
-	
-	
-	
 	
 	
 	
@@ -32,6 +36,13 @@ public abstract class CalendarAccessorCreator {
     protected Activity mApp;
     protected WebView mView;
     
+    /**
+     * This static method returns a new Instance of the implementation class given by parameter
+     * @param className Is a String object with the name of the implementation class
+     * @param webView
+     * @param ctx
+     * @return An instance of CalendarAccessorCreator 
+     */
     public static CalendarAccessorCreator getInstance(String className, WebView webView,PhonegapActivity ctx){
 		try {			
 			Class<? extends CalendarAccessorCreator> clazz = Class.forName(className).asSubclass(CalendarAccessorCreator.class);
@@ -56,6 +67,13 @@ public abstract class CalendarAccessorCreator {
      	return null;
     }
     
+    
+    /**
+     * This static method return a default instance of the implementation class
+     * @param webView
+     * @param ctx
+     * @return An instance of CalendarAccesorCreator
+     */
 	public static CalendarAccessorCreator getInstance(WebView webView,	PhonegapActivity ctx) {	
 	
 		CalendarAccessorCreator calendarInstance = null;
@@ -84,8 +102,26 @@ public abstract class CalendarAccessorCreator {
 		return calendarInstance;
 	}
 
+	/**
+	 * This  method finds the calendar events matching with the options given by parameter, and
+	 * returns a JSONArray with the events found.
+	 * @param options The options are a JSONObject with the following String fields:	
+	 * 				- startBefore: events that start before this date 
+	 * 				- startAfter: events that start after this date
+	 * 				- endBefore: events that end before this date
+	 * 				- endAfter: events that end after this date
+	 * 				
+	 * 				The union of all fields is a great filter for finding the events
+	 * @return A JSONArray object with the events calendar found
+	 */
 	public abstract JSONArray find(JSONObject options);
-
+	
+	/**
+	 * This method save a calendar event given by parameter. The method is used either to update or create one event.
+	 * @param jsonObject Is a JSONObject object with all calendar event fields.	
+	 * @see calendar.js 
+	 * @return A boolean with the success of the method.
+	 */
 	public abstract boolean save(JSONObject jsonObject);
 
 	

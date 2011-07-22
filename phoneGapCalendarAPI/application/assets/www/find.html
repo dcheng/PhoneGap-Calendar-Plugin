@@ -10,12 +10,14 @@
  
 	function findEvents(){	
 		
-		var startAfter = document.getElementById("input-date-after").value;
-		var startBefore = document.getElementById("input-date-before").value;		   	
+		var startAfter = document.getElementById("input-date-start-after").value;
+		var startBefore = document.getElementById("input-date-start-before").value;		   
+		var endAfter = document.getElementById("input-date-end-after").value;
+		var endBefore = document.getElementById("input-date-end-before").value;	
 		
 		
 		
-		var eventFilter = new CalendarEventfilter(startBefore, startAfter, null, null);
+		var eventFilter = new CalendarEventfilter(startBefore, startAfter, endBefore, endAfter);
 		var calendarFindOption = new CalendarFindOptions(eventFilter,true);
 		window.plugins.calendar.find(	calendarFindOption,
 										printResult,
@@ -71,8 +73,10 @@
 <body onload="getUrlForUpdate();">
 	<h1>FIND</h1>
 
-	Start Date: <input id="input-date-after" type="text">  <br/>
-	Finish Date: <input	id="input-date-before" type="text"> <br/>
+	Start After Date: <input id="input-date-start-after" type="text">  <br/>
+	Start Before Date: <input	id="input-date-start-before" type="text"> <br/>
+	End After Date: <input id="input-date-end-after" type="text">  <br/>
+	End Before Date: <input	id="input-date-end-before" type="text"> <br/>
 	<input id="list-dates"	type="button" value="find" onclick="findEvents();"/> <br/>
 	<hr>
 

@@ -1,3 +1,17 @@
+/**
+* Contains information about the calendar Event.
+* @constructor
+* @param {DOMString} id unique identifier
+* @param {DOMString} description A description of the event.
+* @param {DOMString} location A plain text description of the location of the event.
+* @param {DOMString} summary A summary of the event.
+* @param {DOMString} start The start date and time of the event as a valid date or time string.
+* @param {DOMString} end The end date and time of the event as a valid date or time string.
+* @param {DOMString} status An indication of the user's status of the event.
+* @param {DOMString} transparency An indication of the display status to set for the event.
+* @param {CalendarRepeatRule} recurrence The recurrence or repetition rule for this event
+* @param {DOMString} reminder A reminder for the event.
+*/
 var CalendarEvent = function (	id, description, location, summary, start, end, status, transparency, recurrence, reminder){
 	this.id = id || null;
 	this.description = description || null;
@@ -10,14 +24,21 @@ var CalendarEvent = function (	id, description, location, summary, start, end, s
 	this.recurrence = recurrence || null;
 	this.reminder = reminder || null;
 }
-								
+	
 
-
-
-
-
-
-
+/**
+* Contains information about the recurrence of a calendar event item.
+* @constructor
+* @param {DOMString} frecuency The frequency of the CalendarRepeatRule. Must be 'daily', 'weekly', 'monthly', 'yearly'.
+* @param {unsigned short} interval A positive integer defining how often the recurrence rule must repeat.
+* @param {DOMString} expires The date and time to which the CalendarRepeatRule applies as a valid date or time string.
+* @param {DOMString} exceptionDates One or more dates and times to which the CalendarRepeatRule does not apply as valid date or time string strings.
+* @param {short[]} daysInWeek The day or days of the week for which the CalendarRepeatRule applies.
+* @param {short[]} daysInMonth The day or days of the month for which the CalendarRepeatRule applies.
+* @param {short[]} daysInYear The day or days of the year for which the CalendarRepeatRule applies.
+* @param {short[]} weeksInMonth he day or days of the month for which the CalendarRepeatRule applies.
+* @param {short[]} monthsInYear The month or months of the year for which the CalendarRepeatRule applies.
+*/
 var CalendarRepeatRule = function ( frecuency, interval, expires, exceptionDates, daysInWeek, daysInMonth, daysInYear, weeksInMonth, monthsInYear){
 	this.frecuency = frecuency || null;
 	this.interval = interval || null;
@@ -32,14 +53,23 @@ var CalendarRepeatRule = function ( frecuency, interval, expires, exceptionDates
 
 
 
-
+/**
+ * describes the options that can be applied to calendar searching.
+ * @param {CalendarEventFilter} filter A search filter with which to search and initially filter the Calendar database.
+ * @param {boolean} multiple A boolean value to indicate whether multiple Calendar objects are returnable as part of the associated Calendar findEvents() operation.
+ */
 var CalendarFindOptions = function (filter, multiple){
 	  this.filter = filter || '';
 	  this.multiple = multiple || true;	  
 }
 
-
-
+/**
+ * captures the searchable parameters for finding calendar event items.
+ * @param {DOMString} startBefore Search for Calendar Events that start before the time provided as a valid date or time string.
+ * @param {DOMString} startAfter Search for Calendar Events that start after the time provided as a valid date or time string.
+ * @param {DOMString} endBefore Search for Calendar Events that end before the time provided as a valid date or time string.
+ * @param {DOMString} endAfter Search for Calendar Events that end after the time provided as a valid date or time string.
+ */
 var CalendarEventfilter = function (startBefore, startAfter, endBefore, endAfter){
 	this.startBefore = startBefore;
 	this.startAfter = startAfter;
@@ -70,7 +100,10 @@ CalendarError.PERMISSION_DENIED_ERROR = 20;
 
 
 
-
+/**
+ *  Calendar  
+ * @constructor
+ */
 var Calendar = function() { 
 
 }

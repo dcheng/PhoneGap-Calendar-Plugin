@@ -16,14 +16,19 @@ public class CalendarPlugin extends Plugin{
 	public static CalendarAccessorCreator calendarAccessor;
 	private static final String LOG_TAG = "[Android:CalendarPlugin.java]";
 
-	static{
-		
-	}
 	
+	/**
+	 * Executes the request and returns PluginResult.
+	 * 
+	 * @param action 		The action to execute.
+	 * @param args 			JSONArry of arguments for the plugin.
+	 * @param callbackId	The callback id used when calling back into JavaScript.
+	 * @return 				A PluginResult object with a status and message.
+	 */
 	public PluginResult execute(String action, JSONArray args, String callbackId) {
 		Log.d(LOG_TAG, "1 - Plugin calendar called");
 		
-		if (calendarAccessor == null) {			
+		if (calendarAccessor == null) {				
 			calendarAccessor = CalendarAccessorCreator.getInstance(webView, ctx);
 		}
 		

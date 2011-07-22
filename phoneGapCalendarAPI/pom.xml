@@ -67,9 +67,9 @@
           <configuration>
             <sdk>
               <!-- Sergio's android path -->
-			    <path>/home/sergio/development/android/android-sdk-linux_x86</path> 
+			  <!--   <path>/home/sergio/development/android/android-sdk-linux_x86</path>  -->
 			  <!-- Juanmi's android path -->
-			  <!-- <path>/home/juanmi/desarrollo/developments_kit/android-sdk-linux_x86</path>-->
+			  <path>/home/juanmi/desarrollo/developments_kit/android-sdk-linux_x86</path>
 	     	  <platform>${version.android.api}</platform>
             </sdk>
             <deleteConflictingFiles>true</deleteConflictingFiles>
