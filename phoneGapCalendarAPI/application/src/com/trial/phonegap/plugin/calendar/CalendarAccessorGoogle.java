@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,6 +17,7 @@ import com.phonegap.calendar.android.adapters.CalendarsManager;
 import com.phonegap.calendar.android.adapters.Dt;
 import com.phonegap.calendar.android.adapters.Event;
 import com.phonegap.calendar.android.adapters.Recurrence;
+import com.phonegap.calendar.android.adapters.Rule;
 import com.phonegap.calendar.android.model.EventEntry;
 import com.phonegap.calendar.android.model.Reminder;
 import com.phonegap.calendar.android.model.When;
@@ -39,18 +42,51 @@ import android.webkit.WebView;
  */
 public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 
+	/**
+	 * Is a the TAG log for logging
+	 */
 	private static final String TAG = "[Android:CalendarAccessorCreator.java]";
 
+	/**
+	 * This String is used when a parameter given from the interface is null
+	 */
 	private static final String NOT_SPECIFIED_PARSE_CONSTANT = "  - N / D -  ";
+	/**
+	 * This String is used when a parameter given from the interface is null
+	 */
 	private static final String SHORT_NOT_SPECIFIED_PARSE_CONSTANT = "N/D";
+	/**
+	 * Transparency opaque
+	 */
 	private static final String TRANSPARENCY_OPAQUE = "Opaque";
+	/**
+	 * Transparency Transparent
+	 */
 	private static final String TRANSPARENCY_TRANSPARENT = "Transparent";
+	/**
+	 * UNKNOWN is used when the Transparency and status  parameter given from the interface is null
+	 */
 	private static final String UNKNOWN = "Unknown";
+	/**
+	 *  Event status confirmed
+	 */
 	private static final String EVENT_STATUS_CONFIRMED = "Confirmed";
+	/**
+	 * Event status Cacelled
+	 */
 	private static final String EVENT_STATUS_CANCELED = "Cancelled";
+	/**
+	 * Event status tentative
+	 */
 	private static final String EVENT_STATUS_TENTATIVE = "Tentative";
 
+	/**
+	 * Is a instance variable of CalendarManager used to retrieve the user calendars
+	 */
 	private CalendarsManager calendarsManager;
+	/**
+	 * Is a instance variable of Calendar used to find, save and create events into a calendar
+	 */
 	private Calendar calendar;
 
 	/**
@@ -69,6 +105,9 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 		calendar = calendars.get(0);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.trial.phonegap.plugin.calendar.CalendarAccessorCreator#find(org.json.JSONObject)
+	 */
 	@Override
 	public JSONArray find(JSONObject options) {
 
@@ -87,10 +126,11 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 			Log.i(TAG, "Date After: " + filter.getString("endAfter"));
 			Log.i(TAG, "Date Before: " + filter.getString("endBefore"));
 			
-			dateStartAfter = DateUtils.stringCalendarDateToDate(filter.getString("startAfter"), "yyyy-MM-dd HH:mm:ss");
-			dateStartBefore = DateUtils.stringCalendarDateToDate(filter.getString("startBefore"), "yyyy-MM-dd HH:mm:ss");
-			dateEndAfter = DateUtils.stringCalendarDateToDate(filter.getString("endAfter"), "yyyy-MM-dd HH:mm:ss");
-			dateEndBefore = DateUtils.stringCalendarDateToDate(filter.getString("endBefore"), "yyyy-MM-dd HH:mm:ss");
+
+			dateStartAfter = DateUtils.stringCalendarDateToDateGTM(filter.getString("startAfter"), "yyyy-MM-dd HH:mm:ss");
+			dateStartBefore = DateUtils.stringCalendarDateToDateGTM(filter.getString("startBefore"), "yyyy-MM-dd HH:mm:ss");
+			dateEndAfter = DateUtils.stringCalendarDateToDateGTM(filter.getString("endAfter"), "yyyy-MM-dd HH:mm:ss");
+			dateEndBefore = DateUtils.stringCalendarDateToDateGTM(filter.getString("endBefore"), "yyyy-MM-dd HH:mm:ss");
 			
 			// Google Calendar only provides one method for searching events, dates since dateStartAfter until dateStartBefore, 
 			// so we have to configure and adapt the search with the others options, using this method
@@ -178,11 +218,11 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 				// If event it is a recurrence event should not have "When" fields and
 				// viceversa
 				Log.i(TAG, "entramos en : RECURRENCIA parsear end Recurrente");
-				end = DateUtils.stringCalendarDateToDate((String) parseEndRecurrenceDate(event.getRecurrence()), "yyyy-MM-dd HH:mm:ss") ;
+				end = DateUtils.stringCalendarDateToDateGTM((String) parseEndRecurrenceDate(event.getRecurrence()), "yyyy-MM-dd HH:mm:ss") ;
 			}else{	
 				// If event it is not recurrence event should not have recurrence
 				// object info and have "When" info instead of that
-				end = DateUtils.stringCalendarDateToDate(parseEndDate(event.getWhen()), "yyyy-MM-dd HH:mm:ss");			
+				end = DateUtils.stringCalendarDateToDateGTM(parseEndDate(event.getWhen()), "yyyy-MM-dd HH:mm:ss");			
 			}
 			
 			//If dateEndAfter is not null eventList is filtered by this date
@@ -209,6 +249,9 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 		return eventList;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.trial.phonegap.plugin.calendar.CalendarAccessorCreator#save(org.json.JSONObject)
+	 */
 	@Override
 	public boolean save(JSONObject jsonEvent) {
 		try {
@@ -223,10 +266,12 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 	
 			///////////////////PRIVATE METHODS//////////////////////	
 
-	/*
+
+	/**
 	 * Transforms a Event object in a JSONObject
 	 * @param event Event bject
 	 * @return a JSONObject with the information within the event parameter given
+	 * @throws JSONException
 	 */
 	private JSONObject eventToJsonEvent(Event event) throws JSONException {
 
@@ -262,44 +307,182 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 		return jsonEvent;
 	}
 	
-	/*
+	/**
 	 * Transforms a JSONObject object with information about an event in an event object
 	 * @param JsonEvent an JSONObject object with data about an event
 	 * @return an event object with te information within JSONObject object given by parameter
 	 * @throws JSONException
 	 */
-	private Event JsonEventToEvent(JSONObject JsonEvent) throws JSONException {
+	private Event JsonEventToEvent(JSONObject jsonEvent) throws JSONException {
+
 
 		Event event = new Event();
 		
-		event.setRecurrence(null); //TODO ADD SOMETHING
-		event.setTitle(JsonEvent.getString("description"));
 		
-		List<Where> whereList = new ArrayList<Where>();
-		Where where = new Where();
-		where.description = JsonEvent.getString("location");
-		whereList.add(where);
+		if (!jsonEvent.isNull("recurrence")){
+			Recurrence recurrence = new Recurrence();
+			recurrence.setRule(parseJsonRecurrenceRule(jsonEvent.getJSONObject("recurrence")));
+				if (!(jsonEvent.isNull("start")) && (!jsonEvent.isNull("end"))){
+					Dt dt = new Dt();
+					dt.setDate(DateUtils.stringCalendarDateToDateLocale(jsonEvent.getString("start"), "yyyy-MM-dd HH:mm:ss"));
+					
+					TimeZone tm = TimeZone.getDefault();			
+					tm.setID(Locale.getDefault().getISO3Country());
+					
+					dt.setTimeZone(tm.getDisplayName());
+					recurrence.setDtStart(dt);
+					dt.setDate(DateUtils.stringCalendarDateToDateLocale(jsonEvent.getString("end"), "yyyy-MM-dd HH:mm:ss"));
+					recurrence.setDtEnd(dt);
+				}
+			event.setRecurrence(recurrence);	
+		}		
 		
-		event.setWhere(whereList);
+		if (!jsonEvent.isNull("description")){
+			event.setTitle(jsonEvent.getString("description"));	
+		}		
 		
-		event.setSummary(JsonEvent.getString("summary"));
-		event.setEventStatus(constantSelector(JsonEvent.getString("status")));
-		event.setTransparency(constantSelector(JsonEvent.getString("transparency")));
+		if (!jsonEvent.isNull("location")){
+			List<Where> whereList = new ArrayList<Where>();
+			Where where = new Where();
+			where.description = jsonEvent.getString("location");
+			whereList.add(where);
+			
+			event.setWhere(whereList);
+		}
 		
-		List<When> whenList = new ArrayList<When>();
-		When when = new When();
-		when.startTime = new DateTime(DateUtils.stringCalendarDateToDate(JsonEvent.getString("start"), "yyyy-MM-dd HH:mm:ss"));
-		when.endTime = new DateTime(DateUtils.stringCalendarDateToDate(JsonEvent.getString("end"), "yyyy-MM-dd HH:mm:ss"));
-		when.reminders = null; //TODO ADD SOMETHING
-		whenList.add(when);		
+		if (jsonEvent.isNull("summary"))
+			event.setSummary(jsonEvent.getString("summary"));
+		if (jsonEvent.isNull("status"))
+			event.setEventStatus(constantSelector(jsonEvent.getString("status")));
+		if (jsonEvent.isNull("transparency"))
+			event.setTransparency(constantSelector(jsonEvent.getString("transparency")));
+
+		if (jsonEvent.isNull("recurrence")){
+			List<When> whenList = new ArrayList<When>();
+			When when = new When();
+			if (!jsonEvent.isNull("start"))
+				when.startTime = new DateTime(DateUtils.stringCalendarDateToDateLocale(jsonEvent.getString("start"), "yyyy-MM-dd HH:mm:ss"));
+			if (!jsonEvent.isNull("end"))
+				when.endTime = new DateTime(DateUtils.stringCalendarDateToDateLocale(jsonEvent.getString("end"), "yyyy-MM-dd HH:mm:ss"));
+			if (!jsonEvent.isNull("reminder"))
+				when.reminders = parseJsonReminder(jsonEvent.getString("reminder"));
+			whenList.add(when);					
+			event.setWhen(whenList);
+		}
 		
-		event.setWhen(whenList);
-	
 		return event;
 		
 		}
+
 	
-	/*
+
+		/**
+		 * Parser W3C->Google. Returns a List of Reminders object by a string with the information about the reminders. 
+		 * @param string the string 
+		 * @return A List<Reminder>
+		 */
+		private List<Reminder> parseJsonReminder(String string) {
+			Reminder reminder = new Reminder();
+			if (string.contains("alert"))
+				reminder.method = Reminder.METHOD_ALERT;
+			if (string.contains("mail"))
+				reminder.method = Reminder.METHOD_EMAIL;
+			if (string.contains("sms"))
+				reminder.method = Reminder.METHOD_SMS;
+			reminder.minutes = 10;
+			List<Reminder> remiderList = new ArrayList<Reminder>();
+			remiderList.add(reminder);
+			return remiderList;
+		}
+
+		/**
+		 * Parser W3C->Google. Return a recurrence rule by a JSONObject with recurrence data given by parameter
+		 * @param recurrenceJson
+		 * @return a Rule object with the data of the recurrence
+		 * @throws JSONException
+		 */
+		private Rule parseJsonRecurrenceRule(JSONObject recurrenceJson) throws JSONException {
+			
+			Rule recRule = new Rule();
+						
+			if (!recurrenceJson.isNull("frecuency"))
+				recRule.setFreq(recurrenceJson.getString("frecuency"));
+			if (!recurrenceJson.isNull("interval"))
+				recRule.setInterval(recurrenceJson.getInt("interval"));
+			if (!recurrenceJson.isNull("expires"))
+				recRule.setUntil(DateUtils.stringCalendarDateToDateGTM(recurrenceJson.getString("expires"), "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+			if (!recurrenceJson.isNull("exceptionDates"))
+				//Not defined in Ical Spec, so it's going to be ignored here
+				Log.i(TAG,"Ignoring exceptionDates values:" + recurrenceJson.getJSONArray("exceptionDates").toString());
+			if (!recurrenceJson.isNull("daysInWeek"))
+				recRule.setByDay(parseDaysInWeek(recurrenceJson.getJSONArray("daysInWeek")));
+			if (!recurrenceJson.isNull("daysInMonth"))
+				//BYMONTHDAY Ical Spec			
+				recRule.setByMonthDay(parseStringArray(recurrenceJson.getJSONArray("daysInMonth")));
+			if (!recurrenceJson.isNull("daysInYear"))
+				//BYYEARDAY Ical Spec
+				recRule.setByMonthDay(parseStringArray(recurrenceJson.getJSONArray("daysInYear")));
+			if (!recurrenceJson.isNull("weeksInMonth"))
+				//Not defined in Ical Spec, so it's going to be ignored here
+				Log.i(TAG,"Ignoring weeksInMonth values:" + recurrenceJson.getJSONArray("weeksInMonth").toString());
+			if (!recurrenceJson.isNull("monthsInYear"))
+				//BYMONTH Ical Spec
+				recRule.setByMonthDay(parseStringArray(recurrenceJson.getJSONArray("monthsInYear")));		
+			
+			return recRule;
+		}
+
+		/**
+		 * Parser W3C->Google. Return an Array of String by a JSONArray given by parameter
+		 * @param jsonArray
+		 * @return an Array of String
+		 * @throws JSONException
+		 */
+		private String[] parseStringArray(JSONArray jsonArray) throws JSONException {
+			String [] stringArray = new String[jsonArray.length()]; 
+			for (int i =0; i<jsonArray.length(); i++){
+				stringArray[i] = jsonArray.getString(i);
+			}			
+			return stringArray;
+		
+		}
+
+		/**
+		 * Parser W3C->Google. Return an array of String with days of weeks on google format by a 
+		 * JSONArray with information of the day of the weeks in w3c format
+		 * @param jsonArray
+		 * @return An Array of String
+		 * @throws JSONException
+		 */
+		private String[] parseDaysInWeek(JSONArray jsonArray) throws JSONException {
+			/*
+			 * BYDAY Ical Spec for ("SU", "SO",...) 
+			 * ex:
+				   bywdaylist = weekdaynum / ( weekdaynum *("," weekdaynum) )
+			   weekdaynum = [([plus] ordwk / minus ordwk)] weekday
+			   whewe weekday = daysInWeek
+			   
+			 * And first part, included in [***] will not be filled 
+			 */
+			
+			String [] daysInWeek = new String[jsonArray.length()]; 
+			for (int i =0; i<jsonArray.length(); i++){
+				int day = jsonArray.getInt(i);
+				if (day==0) daysInWeek[i] = "SU";
+				if (day==1) daysInWeek[i] = "MO";
+				if (day==2) daysInWeek[i] = "TU";
+				if (day==3) daysInWeek[i] = "WE";
+				if (day==4) daysInWeek[i] = "TH";
+				if (day==5) daysInWeek[i] = "FR";
+				if (day==6) daysInWeek[i] = "SU";
+			}			
+			return daysInWeek;
+		}
+		
+
+			//////////// PARSERS FORM EVENT INTO JSON EVENT /////////////////
+	
+	/**
 	 * W3C uses constants different from the ones used google. 
 	 * This method Transforms constants used by w3c API to constants used by google calendar
 	 * @param string
@@ -319,12 +502,13 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 		else return null;
 
 	}
+	
+	
 
-			//////////// PARSERS FORM EVENT INTO JSON EVENT /////////////////
-	/*
+	/**
 	 * Parser Google->W3C. Returns a string with the information about the ending date of the event with recurrence 
 	 * given the recurrence object of this event
-	 * @param A recurrence object
+	 * @param recurrence A recurrence object
 	 * @return a string with the ending date of the event
 	 */
 	private Object parseEndRecurrenceDate(Recurrence recurrence) {
@@ -343,7 +527,8 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 		return null;
 	}
 
-	/*
+
+	/**
 	 * Parser Google->W3C. Returns a String with the starting date of an event given by the Dt object of the event
 	 * @param dtStart A Dt object
 	 * @return A String with the stating date of an event
@@ -354,7 +539,9 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 		return null;
 	}
 	
-	/*
+
+	
+	/**
 	 * Parser Google->W3C. Returns a String with the W3C Transparency value
 	 * @param transparency String with the Google Transparency value
 	 * @return String with transparency value
@@ -370,7 +557,8 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 		}
 		return null;
 	}
-	/*
+
+	/**
 	 * Parser Google->W3C. Returns a String with the W3C Status value
 	 * @param eventStatus String with the Google status value
 	 * @return string with status value
@@ -388,8 +576,9 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 		}
 		return null;
 	}
+
 	
-	/*
+	/**
 	 * Return an object with the description of the first Where object in the List given by parameter
 	 * @param where List<Where> 
 	 * @return An object with the description of a where object
@@ -405,8 +594,9 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 			return null;
 
 	}
+
 	
-	/*
+	/**
 	 * Private method to print Logs for developers 
 	 * @param where
 	 */
@@ -423,7 +613,8 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 		}
 
 	}
-	/*
+
+	/**
 	 * Parser Google->W3C. Returns a String with a list of reminders given within when parameter
 	 * @param when 
 	 * @return A String
@@ -448,8 +639,9 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 		return null;
 
 	}
+
 	
-	/*
+	/**
 	 * Private method to print Logs for developers 
 	 * @param when
 	 */
@@ -466,7 +658,7 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 	}
 
 	
-	/*
+	/**
 	 * Parser Google->W3C. Returns a String  with the ending event date within "when" given by parameter
 	 * @param when A List of When objects
 	 * @return A String with a ending event date
@@ -479,7 +671,7 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 			}
 			Log.i("FECHACABRONA","FECHA---->"+when.get(0).endTime.toStringRfc3339());
 			return DateUtils.dateToStringCalendarDate(
-					DateUtils.stringCalendarDateToDate(
+					DateUtils.stringCalendarDateToDateGTM(
 							when.get(0).endTime.toStringRfc3339(), 
 							"yyyy-MM-dd'T'HH:mm:ss.SSSZ"), 
 							"yyyy-MM-dd HH:mm:ss");
@@ -487,7 +679,8 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 			return null;
 	}
 
-	/*
+
+	/**
 	 * Parser Google->W3C. Returns a String  with the starting event date within "when" given by parameter
 	 * @param when A List of When objects
 	 * @return A String with a starting event date
@@ -499,7 +692,7 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 				printMissedWhens(when);
 			}
 			return DateUtils.dateToStringCalendarDate(
-					DateUtils.stringCalendarDateToDate(
+					DateUtils.stringCalendarDateToDateGTM(
 							when.get(0).startTime.toStringRfc3339(), 
 							"yyyy-MM-dd'T'HH:mm:ss.SSSZ"), 
 							"yyyy-MM-dd HH:mm:ss");
@@ -507,7 +700,8 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 			return null;
 	}
 
-	/*
+
+	/**
 	 * Checks if the object given by parameter is null. If it is null return a String if not return the same object given by parameter
 	 * @param object Object to check
 	 * @return An object with the result of checking
@@ -516,7 +710,8 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 		return (object == null || object.equals("")) ? NOT_SPECIFIED_PARSE_CONSTANT : object;
 	}
 
-	/*
+
+	/**
 	 * Checks if the object given by parameter is null. If it is null return a String if not return the same object given by parameter
 	 * @param object Object to check
 	 * @return An object with the result of checking
@@ -525,10 +720,11 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 		return (object == null || object.equals("")) ? SHORT_NOT_SPECIFIED_PARSE_CONSTANT : object;
 	}
 
-	/*
+
+	/**
 	 * Parser Google->W3C. Transform a recurrenceRule object given by parameter to a JSONObject object 
 	 * @param recurrenceRule A Recurrence object
-	 * @return JSONObject object 
+	 * @return JSONObject object
 	 */
 	private JSONObject parseRecurrence(Recurrence recurrenceRule) {
 
@@ -550,8 +746,9 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 		return null;
 
 	}
+
 	
-	/*
+	/**
 	 * Parser Google->W3C. Return a String with the expire date of the recurrenceRule given by parameter
 	 * @param recurrenceRule
 	 * @return String object String with the expire date.

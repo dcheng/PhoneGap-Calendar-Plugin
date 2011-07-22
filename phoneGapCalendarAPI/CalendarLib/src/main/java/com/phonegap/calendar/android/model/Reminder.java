@@ -22,6 +22,7 @@ import com.google.api.client.util.Key;
  * Represents a base GData Reminder Entry.
  * 
  * @author Alain Vongsouvanh
+ * @author Sergio Martinez Rodriguez
  */
 public class Reminder {
 

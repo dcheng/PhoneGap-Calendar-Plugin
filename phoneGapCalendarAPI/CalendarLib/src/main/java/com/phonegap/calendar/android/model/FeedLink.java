@@ -35,7 +35,8 @@ import com.google.api.client.util.Key;
  * embedded feed. Note that some services may not support all of these options.</li>
  * </ul>
  * 
- * @author Nicolas Garnier
+ * @author Nicolas Garnier 
+ * @author Sergio Martinez Rodriguez
  */
 public class FeedLink {
 

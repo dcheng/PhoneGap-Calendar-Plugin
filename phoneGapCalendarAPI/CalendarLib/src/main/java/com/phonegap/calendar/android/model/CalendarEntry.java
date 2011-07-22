@@ -17,11 +17,20 @@ package com.phonegap.calendar.android.model;
 import com.google.api.client.util.Key;
 
 /**
+ * Calendar object for new calendar entries in calendar  
  * @author Yaniv Inbar
+ * @author Sergio Martinez Rodriguez
  */
 public class CalendarEntry extends Entry {
 
+	/**
+	 * EVENTS_FEED constant URL
+	 */
 	public static final String EVENTS_FEED = "http://schemas.google.com/gCal/2005#eventFeed";
+	
+	/**
+	 * ACCESS_CONTROL_LIST constant URL
+	 */
 	public static final String ACCESS_CONTROL_LIST = "http://schemas.google.com/acl/2007#accessControlList";
 
 	/** Current user has no access to the calendar. */
@@ -47,6 +56,9 @@ public class CalendarEntry extends Entry {
 	 */
 	public static final String ACCESS_LEVEL_ROOT = "root";
 
+	/**
+	 * Category tag in Calendar feed
+	 */
 	@Key("category")
 	public Category category;
 
@@ -71,15 +83,27 @@ public class CalendarEntry extends Entry {
 	@Key("gCal:color")
 	public Value color;
 
+	/**
+	 * gCal:hidden tag in Calendar feed
+	 */
 	@Key("gCal:hidden")
 	public Boolean hidden;
 
+	/**
+	 * gCal:selected tag in Calendar feed
+	 */
 	@Key("gCal:selected")
 	public Boolean selected;
 
+	/**
+	 * gCal:timezone tag in Calendar feed
+	 */
 	@Key("gCal:timezone")
 	public String timezone;
 
+	/**
+	 * Calls clone method in superclass
+	 */
 	  @Override
 	  public CalendarEntry clone() {
 	    return (CalendarEntry) super.clone();

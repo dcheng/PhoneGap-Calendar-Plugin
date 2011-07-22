@@ -24,7 +24,7 @@ var CalendarEvent = function (	id, description, location, summary, start, end, s
 	this.recurrence = recurrence || null;
 	this.reminder = reminder || null;
 }
-	
+
 
 /**
 * Contains information about the recurrence of a calendar event item.
@@ -142,7 +142,6 @@ CalendarEvent.prototype.remove = function(successCB, errorCB) {
         PhoneGap.exec(successCB, errorCB, "CalendarPlugin", "remove", [this.id]);
     }
 };
-
 
 /**
 * Persists calendar to device storage.

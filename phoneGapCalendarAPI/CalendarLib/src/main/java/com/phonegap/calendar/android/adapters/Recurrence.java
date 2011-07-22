@@ -4,15 +4,40 @@ import com.phonegap.calendar.android.utils.DateUtils;
 
 import android.util.Log;
 
+/**
+ * This class instances will represent the recurrence Rules in the calendar events
+ * aim of all operations we can find here is to parse the Recurrence String info in the
+ * EventEntry into an the corresponding attributes of this class for getting an useful 
+ * object, in the same way we can do the same, write this class instances like Recurrence
+ * rule String.
+ * This class attributes and methods are implemented by following the Ical Specifications
+ * described by IETF in :  @link http://www.ietf.org/rfc/rfc2445.txt
+ * @author Sergio Martinez Rodriguez 
+ */
 public class Recurrence {
 
 	private static final String TAG = "Recurrence";
 	
+	/**
+	 * Dt object that represents the "DTSART:" rfc2445 label in a recurrence object
+	 */
 	private Dt dtStart;
+	/**
+	 * Dt object that represents the "DTEND:" rfc2445 label in a recurrence object
+	 */
 	private Dt dtEnd;
+	/**
+	 * Dt object that represents the "DURATION:" rfc2445 label in a recurrence object
+	 */
 	private Duration duration;
+	/**
+	 * Dt object that represents the "RRULE:" rfc2445 label in a recurrence object
+	 */
 	private Rule rule;
 	
+	/**
+	 * Constructor that initialize attributes dtStart, dtEndt, duration and rule to null value 
+	 */
 	public Recurrence (){
 		this.dtStart = null;
 		this.dtEnd = null;
@@ -20,6 +45,12 @@ public class Recurrence {
 		this.rule = null;
 	}
 	
+	/**
+	 * Constructor that receives a recurrence object as String with rfc2445 format
+	 * and makes an instance of this class as Recurrence object by parsing the received
+	 * string
+	 * @param recurrence recurrence string with rfc2445 Ical format
+	 */
 	public Recurrence (String recurrence){
 		
 //		Log.i(TAG, "REUCRRENCE STRING-->"+recurrence);
@@ -48,38 +79,75 @@ public class Recurrence {
 
 	}
 	
+	/**
+	 * Gets dtStart attribute
+	 * @return Dt Object corresponding to DTSTART rfc2445 label String value
+	 */
 	public Dt getDtStart() {
 		return dtStart;
 	}
 
+	/**
+	 * Sets dtStart attribute
+	 * @param dtStart Dt Object corresponding to DTSTART rfc2445 label String value
+	 */
 	public void setDtStart(Dt dtStart) {
 		this.dtStart = dtStart;
 	}
 
+	/**
+	 * Gets dtEnd attribute
+	 * @return Dt Object corresponding to DTEND rfc2445 label String value
+	 */
 	public Dt getDtEnd() {
 		return dtEnd;
 	}
 
+	/**
+	 * Sets dtEnd attribute
+	 * @param dtEnd Dt Object corresponding to DTEND rfc2445 label String value
+	 */
 	public void setDtEnd(Dt dtEnd) {
 		this.dtEnd = dtEnd;
 	}
 
+	/**
+	 * Gets duration attribute
+	 * @return Duration Object corresponding to DURATION rfc2445 label String value
+	 */
 	public Duration getDuration() {
 		return duration;
 	}
 
+	/**
+	 * Sets duration attribute
+	 * @param duration Duration Object corresponding to DURATION rfc2445 label String value
+	 */
 	public void setDuration(Duration duration) {
 		this.duration = duration;
 	}
 
+	/**
+	 * Gets rule attribute
+	 * @return Rule Object corresponding to RRULE rfc2445 label String value
+	 */
 	public Rule getRule() {
 		return rule;
 	}
 
+	/**
+	 * Gets rule attribute
+	 * @param rule Rule Object corresponding to RRULE rfc2445 label String value
+	 */
 	public void setRule(Rule rule) {
 		this.rule = rule;
 	}
 
+	/**
+	 * Writes the complete Recurrence object as String with the rfc2445 ietf format
+	 * for the recurrence fields.
+	 * @return result String with rfc2445 format
+	 */
 	public String getRecurrenceRuleAsString(){
 		String result;
 		
@@ -91,6 +159,13 @@ public class Recurrence {
 		return result;
 	}
 	
+	/**
+	 * Parses received String corresponding to "RRULE" rfc2445 label in a recurrence
+	 * event into a Rule object. The parsing process is following the detailed 
+	 * specifications in  http://www.ietf.org/rfc/rfc2445.txt
+	 * @param string "RRULE" String with rfc2445 format
+	 * @return Rule instance
+	 */
 	private Rule parseRule(String string) {
 		
     	String [] ruleArray = string.split(":");
@@ -104,7 +179,7 @@ public class Recurrence {
     		rule.setFreq(getSubstring(splitedRuleArray[i], "FREQ=", null));
     	
     	if (splitedRuleArray[1].contains("UNTIL="))
-    		rule.setUntil(DateUtils.stringCalendarDateToDate(getSubstring(splitedRuleArray[i], "UNTIL=", ";"), "yyyyMMdd'T'HHmmss'Z'"));
+    		rule.setUntil(DateUtils.stringCalendarDateToDateGTM(getSubstring(splitedRuleArray[i], "UNTIL=", ";"), "yyyyMMdd'T'HHmmss'Z'"));
     	else if (splitedRuleArray[i].contains("COUNT="))
     		rule.setCount(Integer.parseInt(getSubstring(splitedRuleArray[i], "COUNT=", null)));
     	
@@ -166,6 +241,13 @@ public class Recurrence {
 		return rule;
 	}
 
+	/**
+	 * Parses received String corresponding to "DTSTART"/"DTEND" rfc2445 label in a recurrence
+	 * event into a DT object. The parsing process is following the detailed 
+	 * specifications in  http://www.ietf.org/rfc/rfc2445.txt
+	 * @param dtToParse "DTSTART"/"DTEND" String with rfc2445 format
+	 * @return DT instance
+	 */
 	private Dt parseDt(String dtToParse){
     	
     	String [] dtStartArray = dtToParse.split(":");
@@ -180,13 +262,20 @@ public class Recurrence {
         	}
         }
         if (dtStartArray[1].contains("T"))
-        	dt.setDate(DateUtils.stringCalendarDateToDate(dtStartArray[1], "yyyyMMdd'T'HHmmss"));
+        	dt.setDate(DateUtils.stringCalendarDateToDateGTM(dtStartArray[1], "yyyyMMdd'T'HHmmss"));
         else 
-        	dt.setDate(DateUtils.stringCalendarDateToDate(dtStartArray[1], "yyyyMMdd"));
+        	dt.setDate(DateUtils.stringCalendarDateToDateGTM(dtStartArray[1], "yyyyMMdd"));
 
         	return dt;
     }
-    
+
+	/**
+	 * Parses received String corresponding to "DURATION" rfc2445 label in a recurrence
+	 * event into a Duration object. The parsing process is following the detailed 
+	 * specifications in  http://www.ietf.org/rfc/rfc2445.txt
+	 * @param durationToParse "DURATION" String with rfc2445 format
+	 * @return Duration instance
+	 */
     private Duration parseDuration(String durationToParse){
     	
     	String [] durationArray = durationToParse.split(":PT");
@@ -223,6 +312,14 @@ public class Recurrence {
         
             }
     
+    /**
+     * Select the substring that matches between the two given strings 
+     * EX: getSubstring("Example", "xa", "le") returns : "mp" 
+     * @param string string that contains the substring
+     * @param begin string that delimit the begin of substring when matches (excluding this string) (0 if null) 
+     * @param end string that delimit the end of substring when matches (excluding this string) (length of main string if null)
+     * @return
+     */
     private String getSubstring(String string, String begin, String end){
     	
     	int intBeg = 0;

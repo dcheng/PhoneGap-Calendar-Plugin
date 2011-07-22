@@ -22,11 +22,19 @@ import com.google.api.client.util.Key;
  * Represents a simple GData Value Element.
  * 
  * @author Alain Vongsouvanh
+ * @author Sergio Martinez Rodriguez
  */
 public class Value {
-  @Key("@value")
+  
+	/**
+   * String with the value text
+   */
+	@Key("@value")
   public String value;
 
+	/**
+	 * Writes the value attribute as string
+	 */
   @Override
   public String toString() {
     return value;

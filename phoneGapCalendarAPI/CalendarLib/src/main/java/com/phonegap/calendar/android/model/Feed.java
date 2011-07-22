@@ -19,20 +19,38 @@ import com.google.api.client.util.Key;
 import java.util.List;
 
 /**
+ * Abstract class, represents the basic feed, all feeds should extend this
+ * class, like EventFeed and CalendarFeed  
  * @author Yaniv Inbar
+ * @author Sergio Martinez Rodriguez
  */
 public abstract class Feed {
 
+	/**
+	 * List of links in feed, corresponding to all links in the "link" tag in feed 
+	 */
   @Key("link")
   public List<Link> links;
 
+  /**
+   * Gets the next Link
+   * @return Next link as String
+   */
   public String getNextLink() {
     return Link.find(links, "next");
   }
 
+  /**
+   * Gets bacht link
+   * @return String with bacth link
+   */
   public String getBatchLink() {
     return Link.find(links, "http://schemas.google.com/g/2005#batch");
   }
   
+  /**
+   * Returns the list of Entries in the feed
+   * @return List of Entries in the feed
+   */
   public abstract List<? extends Entry> getEntries();
 }

@@ -19,22 +19,40 @@ package com.phonegap.calendar.android.model;
 import com.google.api.client.util.Key;
 
 /**
+ * This class is not being used to perform any function in
+ * this library at the moment.
  * @author Yaniv Inbar
+ * @author Sergio Martinez Rodriguez
  */
 public class BatchStatus {
 
+	/**
+	 * BatchStatus tag code field
+	 */
   @Key("@code")
   public int code;
 
+  /**
+   * BatchStatus tag text field
+   */
   @Key("text()")
   public String content;
   
+  /**
+   * BatchStatus tag content-type field 
+   */
   @Key("@content-type")
   public String contentType;
 
+  /**
+   * BatchStatus tag reason field
+   */
   @Key("@reason")
   public String reason;
   
+  /**
+   * Costructor
+   */
   public BatchStatus() {
   }
 }

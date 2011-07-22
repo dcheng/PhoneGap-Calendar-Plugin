@@ -23,16 +23,26 @@ import com.google.api.client.util.Key;
  * 
  * @since 2.2
  * @author Nicolas Garnier
+ * @author Sergio Martinez Rodriguez
  */
 public class Category {
 
-  @Key("@scheme")
+	/**
+	 * scheme field of category 
+	 */
+@Key("@scheme")
   public String scheme;
 
-  @Key("@term")
+	/**
+	 * term field of category 
+	 */
+@Key("@term")
   public String term;
 
-  @Override
+  /* (non-Javadoc)
+ * @see java.lang.Object#equals(java.lang.Object)
+ */
+@Override
   public boolean equals(Object category) {
     return (category instanceof Category)
         && (((this.scheme == null) && (((Category) category).scheme == null))

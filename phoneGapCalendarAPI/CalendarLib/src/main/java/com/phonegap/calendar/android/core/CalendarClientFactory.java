@@ -17,23 +17,68 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
-import com.phonegap.calendar.android.model.CalendarClient;
+import com.phonegap.calendar.android.accounts.AccountsUtils;
+import com.phonegap.calendar.android.accounts.GoogleAccountUtils;
 
-
+/**
+ * The aim of this class is to get an instance of the Google CalendarClient
+ * and the CalendarClient object obtained must be able to access to
+ * user google account calendar information.  
+ * @author Sergio Martinez Rodriguez
+ *
+ */
 public class CalendarClientFactory {
 	
 	private static final String TAG = "CalendarClientFactory";
+	
+	/**
+	 * google calendar User account access token 
+	 */
 	static final String PREF_AUTH_TOKEN = "authToken";
+	
+	/**
+	 * Session Id
+	 */
 	static final String PREF_GSESSIONID = "gsessionid";
+	/**
+	 * Name of file for shared_preferences
+	 */
 	private static final String PREF = "MyPrefs";
 	
+	/**
+	 * HttpTransport attribute for obtaining the HttpRequest
+	 */
 	private static HttpTransport transport;	
+	/**
+	 * User google Calendar account acces token
+	 */
 	private static String authToken;	  	
+	/**
+	 * Google CalendarClient object will be returned as new instance 
+	 */
 	private static CalendarClient calendarClient = null;	
+	/**
+	 * Session id
+	 */
 	private static  String gsessionid;
+	/**
+	 * Shared preferences object for storing the user info
+	 */
 	private static SharedPreferences settings;
+	/**
+	 * Google Account Manager object for accessing into google authentication service  
+	 */
 	private static GoogleAccountManager accountManager;
 	  
+	/**
+	 * This method creates an instance of Google CalendarClient
+	 * if it does not exists, for this aim we need use the 
+	 * account manager and the {@link GoogleAccountUtils} methods
+	 * in order to get the access token and fill the corresponding 
+	 * init values into the new ClientCalendar instance 
+	 * @param context ANdroid app context
+	 * @return CalendarClient instance with access into the google calendar account 
+	 */
 	  static public CalendarClient getInstance(Context context){
 		  
 		  if (calendarClient==null){ 
@@ -44,10 +89,10 @@ public class CalendarClientFactory {
 			authToken = settings.getString(PREF_AUTH_TOKEN, null);
 	
 		  	if (authToken==null){
-		  		AccountsUtils accountsUtils = new AccountsUtils();
+		  		GoogleAccountUtils googleAccountsUtils = new GoogleAccountUtils();
 		  		//here you must specify the account in which you want work on
-		  		if (accountsUtils.getAccountsByType(context, "com.google").length>0){
-		  			authToken = accountsUtils.selectAccount(context,accountsUtils.getAccountsByType(context, "com.google")[0]);
+		  		if (AccountsUtils.getAccountsByType(context, "com.google").length>0){
+		  			authToken = googleAccountsUtils.selectAccount(context,AccountsUtils.getAccountsByType(context, "com.google")[0]);
 		  		}
 		  		else {
 		  			Log.e(TAG, "You have not any account asociated into this device");

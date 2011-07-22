@@ -13,7 +13,6 @@
 * License for the specific language governing permissions and limitations under
 * the License.
 */
-
 package com.phonegap.calendar.android.model;
 
 import com.google.api.client.util.Key;
@@ -28,16 +27,33 @@ import com.google.api.client.util.Key;
 * 
 * @author Alain Vongsouvanh
 * @author Nicolas Garnier
-* @author Sergio Martinez
+* @author Sergio Martinez Rodriguez
 */
 public class Who {
 
+	/**
+	 *  STATUS_ACCEPTED constant URL
+	 */
  public static final String STATUS_ACCEPTED = "http://schemas.google.com/g/2005#event.accepted";
+ /**
+  * STATUS_DECLINED constant URL
+  */
  public static final String STATUS_DECLINED = "http://schemas.google.com/g/2005#event.declined";
+ /**
+  * STATUS_INVITED constant URL
+  */
  public static final String STATUS_INVITED = "http://schemas.google.com/g/2005#event.invited";
+ /**
+  * STATUS_TENTATIVE constant URL
+  */
  public static final String STATUS_TENTATIVE = "http://schemas.google.com/g/2005#event.tentative";
-
+/**
+ * TYPE_OPTIONAL constant URL
+ */
  public static final String TYPE_OPTIONAL = "http://schemas.google.com/g/2005#event.optional";
+ /**
+  * TYPE_REQUIRED constant URL
+  */
  public static final String TYPE_REQUIRED = "http://schemas.google.com/g/2005#event.required";
 
  /**
