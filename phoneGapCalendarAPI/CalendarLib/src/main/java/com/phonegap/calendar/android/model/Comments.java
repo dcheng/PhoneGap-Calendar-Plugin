@@ -23,6 +23,7 @@ import com.google.api.client.util.Key;
  * 
  * @author Alain Vongsouvanh
  * @author Nicolas Garnier
+ * @author Sergio Martinez Rodriguez
  */
 public class Comments {
 
@@ -31,14 +32,6 @@ public class Comments {
 
   /** Professional reviews */
   public static final String TYPE_REVIEWS = "http://schemas.google.com/g/2005#reviews";
-
-//  /**
-//   * Type of comments contained within. Currently, there's a distinction between
-//   * regular comments and reviews. Valid values are {@link #TYPE_REGULAR} and
-//   * {@link #TYPE_REVIEWS}.
-//   */
-//  @Key("@rel")
-//  public String type;
 
   /** Comments feed. This feed should implement the Message kind. */
   @Key("gd:feedLink")

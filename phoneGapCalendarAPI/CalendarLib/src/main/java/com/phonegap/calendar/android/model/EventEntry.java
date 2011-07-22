@@ -7,9 +7,10 @@ import com.google.api.client.util.Key;
 
 
 /**
- * Represents a base GData Event Entry.
+ * Represents a base GData EventEntry.
  * 
  * @author Alain Vongsouvanh
+ * @author Sergio Martinez Rodriguez
  */
 public class EventEntry extends Entry {
 
@@ -43,9 +44,15 @@ public class EventEntry extends Entry {
 	  /** Allow most readers to see the event. */
 	  public static final String VISIBILITY_PUBLIC = "http://schemas.google.com/g/2005#event.public";
 
+	  /**
+	   * Content attribute, represents the content tag info in GData Event
+	   */
 	  @Key("content")
 	  public String content;
 
+	  /**
+	   * Comments attribute, represents the gd:comments tag info in GData Event
+	   */
 	  @Key("gd:comments")
 	  public Comments comments;
 
@@ -56,16 +63,22 @@ public class EventEntry extends Entry {
 	  @Key("gd:eventStatus")
 	  public Value eventStatus;
 
+	  /**
+	   * Recurrence attribute, represents the gd:recurrence tag info in GData Event, is a string with rfc2445 Ical recurrence format
+	   */
 	  @Key("gd:recurrence")
 	  public String recurrence;
 
+	  /**
+	   * Reminder attribute, represents the gd:reminder tag info in GData Event
+	   */
 	  @Key("gd:reminder")
 	  private List<Reminder> reminders_;
 
 	  /**
 	   * Transparency of the event. corresponding to the TRANSP property defined in
 	   * RFC 2445. Possible values are {@link #TRANSPARENCY_OPAQUE} and
-	   * {@link Event#TRANSPARENCY_TRANSPARENT}.
+	   * {@link #TRANSPARENCY_TRANSPARENT}.
 	   */
 	  @Key("gd:transparency")
 	  public Value transparency;
@@ -78,12 +91,21 @@ public class EventEntry extends Entry {
 	  @Key("gd:visibility")
 	  public Value visibility;
 
+	  /**
+	   * When attribute, represents the gd:when tag info in GData Event
+	   */
 	  @Key("gd:when")
 	  public List<When> when;
 
+	  /**
+	   * where attribute, represents the gd:where tag info in GData Event
+	   */
 	  @Key("gd:where")
 	  public List<Where> where;
 
+	  /**
+	   * who attribute, represents the gd:who tag info in GData Event
+	   */
 	  @Key("gd:who")
 	  public List<Who> who;
 
@@ -128,6 +150,9 @@ public class EventEntry extends Entry {
 	  @Key("gCal:sequence")
 	  public Value sequence;
 
+	  /**
+	   * id attribute, represents the gCal:uid tag info in GData Event
+	   */
 	  @Key("gCal:uid")
 	  public Value uid;
 
@@ -156,6 +181,10 @@ public class EventEntry extends Entry {
       return null;
   }
 
+  /**
+   * Adds a reminder into Event reminder list
+   * @param reminder new reminder to be added
+   */
   public void addReminder(Reminder reminder) {
     List<Reminder> reminders = null;
 

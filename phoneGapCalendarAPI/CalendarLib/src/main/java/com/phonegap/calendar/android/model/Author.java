@@ -19,14 +19,22 @@ package com.phonegap.calendar.android.model;
 import com.google.api.client.util.Key;
 
 /**
+ * Represents the author of the entry
 * @author Yaniv Inbar
 * @author Nicolas Garnier
+* @author Sergio Martinez
 */
 public class Author {
 
+	/**
+	 * Name of author
+	 */
  @Key
  public String name;
 
+ /**
+  * E-mail address of author
+  */
  @Key
  public String email;
 }

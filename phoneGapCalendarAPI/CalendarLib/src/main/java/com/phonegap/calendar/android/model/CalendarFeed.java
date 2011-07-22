@@ -20,14 +20,23 @@ import com.google.common.collect.Lists;
 import java.util.List;
 
 /**
+ * Calendar object for new calendar feed  
  * @author Yaniv Inbar
+ * @author Sergio Martinez Rodriguez
  */
 public class CalendarFeed extends Feed {
 
+	/**
+	 * entry tag in calendar feed 
+	 */
   @Key("entry")
   public List<CalendarEntry> calendars = Lists.newArrayList();
   
-  @Override
+
+  /* (non-Javadoc)
+ * @see com.phonegap.calendar.android.model.Feed#getEntries()
+ */
+@Override
   public List<CalendarEntry> getEntries() {
     return calendars;
   }

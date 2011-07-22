@@ -21,24 +21,43 @@ import java.util.List;
 
 /**
  * @author Yaniv Inbar
+ * @author Sergio Martínez Rodríguez
  */
 public class Entry implements Cloneable {
 
+	/**
+	 * summary string corresponding to summary tag in Entry
+	 */
   @Key
   public String summary;
 
+  /**
+	 * updated String corresponding to updated tag in Entry
+	 */
   @Key
   public String updated;
 
+  /**
+	 * List of links corresponding to links tags in Entry
+	 */
   @Key("link")
   public List<Link> links;
 
+  /**
+	 * Author object corresponding to author tag in Entry
+	 */
   @Key("author")
   public Author author;
   
+  /**
+   * id String corresponding to id tag in Entry
+   */
   @Key
   public String id;
 
+  /**
+   * title String corresponding to title tag in Entry
+   */
   @Key("title")
   public String title;
   
@@ -47,11 +66,14 @@ public class Entry implements Cloneable {
    * 
    * @return The self link of the Entry or {@code null} if not found.
    */
-  public String getSelfLink() {
+public String getSelfLink() {
     return Link.find(links, "self");
   }
   
-  @Override
+  /* (non-Javadoc)
+ * @see java.lang.Object#clone()
+ */
+@Override
   protected Entry clone() {
     try {
       @SuppressWarnings("unchecked")
@@ -63,7 +85,11 @@ public class Entry implements Cloneable {
     }
   }
 
-  public String getEditLink() {
+  /**
+   * Find liks with the "edit" value in the "rel" field
+   * @return String with the href link
+   */
+public String getEditLink() {
     return Link.find(links, "edit");
   }
 }

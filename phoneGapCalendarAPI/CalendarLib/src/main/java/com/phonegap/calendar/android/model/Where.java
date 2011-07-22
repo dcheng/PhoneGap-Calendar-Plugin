@@ -27,6 +27,7 @@ import com.google.api.client.util.Key;
  * 
  * @since 2.2
  * @author Nicolas Garnier
+ * @author Sergio Martinez Rodriguez
  */
 public class Where {
 

@@ -20,18 +20,34 @@ import java.util.List;
 
 /**
  * @author Yaniv Inbar
+ * @author Sergio Martinez Rodriguez
  */
 public class Link {
 
+	/**
+	 * href string corresponding to href tag in Link
+	 */
   @Key("@href")
   public String href;
 
+  /**
+   * type string corresponding to type tag in Link
+   */
   @Key("@type")
   public String type;
   
+  /**
+   * rel string corresponding to rel tag in Link
+   */
   @Key("@rel")
   public String rel;
 
+  /**
+   * Finds the href url for the given links that matches given rel string
+   * @param links List of Links objects
+   * @param rel string with rel type
+   * @return href string 
+   */
   public static String find(List<Link> links, String rel) {
     if (links != null) {
       for (Link link : links) {

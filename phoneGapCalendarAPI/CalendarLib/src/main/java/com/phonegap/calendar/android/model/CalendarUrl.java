@@ -16,27 +16,54 @@ package com.phonegap.calendar.android.model;
 
 import com.google.api.client.googleapis.GoogleUrl;
 import com.google.api.client.util.Key;
+import com.phonegap.calendar.android.core.CalendarClient;
 
 /**
+ * With this class we can instanciate a CalendarUrl object and
+ * later obtain the requested feeds in each method corresponding to
+ * the operation we want perform
  * @author Yaniv Inbar
+ * @author Sergio Martinez Rodriguez
  */
 public class CalendarUrl extends GoogleUrl {
 
   public static final String ROOT_URL = "https://www.google.com/calendar/feeds";
 
+  /**
+   * Parameter max-results in CalendarUrl object, 
+   * represents the maximum results we can get 
+   * for the requested operation
+   */
   @Key("max-results")
   public Integer maxResults;
-  
+
+  /**
+   * Parameter start-min in CalendarUrl object, represents the 
+   * minimum start date of event for the requested search
+   */
   @Key("start-min")
   public String startMin;
   
+  /**
+   * Parameter start-max in CalendarUrl object, represents the 
+   * maximum start date of event for the requested search
+   */
   @Key("start-max")
   public String startMax;
   
+  /**
+   * Parameter q in CalendarUrl object, represents that the request
+   * performed is going to be like a query at calendar asking just for
+   * the events containing the given value for q as search parameter 
+   */
   @Key("q")
   public String title;
   
 
+  /**
+   * Constructor using an URL String 
+   * @param url String with the provided URL
+   */
   public CalendarUrl(String url) {
     super(url);
     if (CalendarClient.DEBUG) {
@@ -44,16 +71,28 @@ public class CalendarUrl extends GoogleUrl {
     }
   }
 
+  /**
+   * Root user calendar Url
+   * @return CalendarUrl
+   */
   private static CalendarUrl forRoot() {
     return new CalendarUrl(ROOT_URL);
   }
 
+  /**
+   * Default calendar Url
+   * @return CalendarUrl
+   */
   public static CalendarUrl forCalendarMetafeed() {
     CalendarUrl result = forRoot();
     result.pathParts.add("default");
     return result;
   }
 
+  /**
+   * Url for getting all user's calendars
+   * @return CalendarUrl
+   */
   public static CalendarUrl forAllCalendarsFeed() {
     CalendarUrl result = forCalendarMetafeed();
     result.pathParts.add("allcalendars");
@@ -61,6 +100,10 @@ public class CalendarUrl extends GoogleUrl {
     return result;
   }
 
+  /**
+   * Url for getting owned user's calendars
+   * @return CalendarUrl
+   */
   public static CalendarUrl forOwnCalendarsFeed() {
     CalendarUrl result = forCalendarMetafeed();
     result.pathParts.add("owncalendars");
@@ -68,6 +111,13 @@ public class CalendarUrl extends GoogleUrl {
     return result;
   }
 
+  /**
+   * Url for getting provided user's calendar events with specified parameters
+   * @param userId authenticathed user
+   * @param visibility visibility
+   * @param  projection projection
+   * @return CalendarUrl
+   */
   public static CalendarUrl forEventFeed(String userId, String visibility, String projection) {
     CalendarUrl result = forRoot();
     result.pathParts.add(userId);
@@ -76,17 +126,17 @@ public class CalendarUrl extends GoogleUrl {
     return result;
   }
 
+  /**
+   * Url for getting all authenticathed user events
+   * @return CalendarUrl
+   */
   public static CalendarUrl forDefaultPrivateFullEventFeed() {
     return forEventFeed("default", "private", "full");
   }
  
   /**
-   * 
-   * @param userId
-   * @param visibility
-   * @param projection
-   * @param id
-   * @return
+   *  Url for getting authenticathed user events with title search param
+   * @return CalendarUrl
    */
   public static CalendarUrl forDefaultPrivateFullEventFeedueriedByTittle(String title) {
 	    CalendarUrl result = forDefaultPrivateFullEventFeed();
@@ -94,7 +144,12 @@ public class CalendarUrl extends GoogleUrl {
 	    return result;
 	  }
   
-  
+  /**
+   * Url for getting authenticathed user events between the given dates
+   * @param startMin min startDate for retrieved events
+   * @param startMax max startDate for retrieved events
+   * @return CalendarUrl
+   */
   public static CalendarUrl forDefaultPrivateFullEventFeedBetweenDates(String startMin, String startMax) {
 	    CalendarUrl result = forDefaultPrivateFullEventFeed();
 	    if (startMin!=null)

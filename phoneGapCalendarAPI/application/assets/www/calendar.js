@@ -9,13 +9,7 @@ var CalendarEvent = function (	id, description, location, summary, start, end, s
 	this.transparency = transparency || null;
 	this.recurrence = recurrence || null;
 	this.reminder = reminder || null;
-}
-								
-
-
-
-
-
+}								
 
 
 var CalendarRepeatRule = function ( frecuency, interval, expires, exceptionDates, daysInWeek, daysInMonth, daysInYear, weeksInMonth, monthsInYear){
@@ -109,7 +103,6 @@ CalendarEvent.prototype.remove = function(successCB, errorCB) {
         PhoneGap.exec(successCB, errorCB, "CalendarPlugin", "remove", [this.id]);
     }
 };
-
 
 /**
 * Persists calendar to device storage.
