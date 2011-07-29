@@ -1,8 +1,6 @@
 package com.trial.phonegap.plugin.calendar;
 
 
-
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,12 +18,8 @@ import android.webkit.WebView;
 
 public class CalendarAccessorMock extends CalendarAccessorCreator{
 	private static final String LOG_TAG = "[Android:CalendarAccesorMock.java]";
-	static List<JSONObject> calendar1; 
+	private static List<JSONObject> calendar1; 
 	
-	static{
-	
-
-	}
 	 /**
      * Create an contact accessor.
      */
@@ -35,7 +29,9 @@ public class CalendarAccessorMock extends CalendarAccessorCreator{
 		
 		init();
 	}
-    
+    /**
+     * This auxiliary method sets up the calendar
+     */
 	private void init() {
 	calendar1 = new ArrayList<JSONObject>();
 		
@@ -75,7 +71,7 @@ public class CalendarAccessorMock extends CalendarAccessorCreator{
 		
 	}
 
-	@Override
+	@Override	
 	public JSONArray find(JSONObject options) {	
 		Date dateAfter = null;
 		Date dateBefore = null;
@@ -104,7 +100,9 @@ public class CalendarAccessorMock extends CalendarAccessorCreator{
 		return events;	
 		
 	}
-	
+	/**
+	 * 
+	 */
 	@Override
 	public boolean save(JSONObject newCalendarEvent) {
 		try {
@@ -126,7 +124,11 @@ public class CalendarAccessorMock extends CalendarAccessorCreator{
 		}
 		return true;
 	}
-	
+	/**
+	 * Return a true boolean value if the given parameter is an eventCalendar and it is in the current calendar
+	 * @param eventCalendar
+	 * @return a boolean
+	 */
 	private boolean exists(JSONObject eventCalendar){
 	
 		try {
@@ -146,7 +148,22 @@ public class CalendarAccessorMock extends CalendarAccessorCreator{
 		return true;
 		
 	}
-	
+	/**
+	 * Add an event to calendar with the given paramaters
+	 * @param calendar
+	 * @param description
+	 * @param location
+	 * @param summary
+	 * @param start
+	 * @param end
+	 * @param status
+	 * @param transparency
+	 * @param reminder
+	 * @param frequency
+	 * @param daysInMonth
+	 * @param monthsInYear
+	 * @param expires
+	 */
 	private static void addCalendar(List<JSONObject> calendar,									
 									String description,
 									String location,
@@ -189,10 +206,15 @@ public class CalendarAccessorMock extends CalendarAccessorCreator{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	
 		
 	}
-	
-	public static Date stringToDate(String dateString) {
+	/**
+	 * Parse a String into Date, with format yyyy-MM-dd HH:mm:ss
+	 * @param dateString
+	 * @return
+	 */
+	private static Date stringToDate(String dateString) {
 		Date date = null;
 
 		SimpleDateFormat dformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -211,7 +233,7 @@ public class CalendarAccessorMock extends CalendarAccessorCreator{
 	 * @param date
 	 * @return String date
 	 */
-	public static String dateToString(Date date){		
+	private static String dateToString(Date date){		
 		SimpleDateFormat dformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return dformat.format(date);
 		

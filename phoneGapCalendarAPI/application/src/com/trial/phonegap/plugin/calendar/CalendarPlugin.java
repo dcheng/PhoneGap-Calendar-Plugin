@@ -13,6 +13,8 @@ import com.phonegap.api.PluginResult;
 public class CalendarPlugin extends Plugin{
 	
 	private static final String ACTION_FIND = "find";
+	private static final String ACTION_SAVE = "save";
+	private static final String ACTION_DELETE = "delete";
 	public static CalendarAccessorCreator calendarAccessor;
 	private static final String LOG_TAG = "[Android:CalendarPlugin.java]";
 
@@ -45,7 +47,7 @@ public class CalendarPlugin extends Plugin{
 				JSONArray res = calendarAccessor.find(options);
 				Log.d(LOG_TAG, "3 - return plugin result for service find");
 				return new PluginResult(PluginResult.Status.OK, res, "window.plugins.calendar.cast");
-			}else if (action.equals("save")) {
+			}else if (action.equals(ACTION_SAVE)) {
 				Log.d(LOG_TAG, "2 - Action service save");
 				if (calendarAccessor.save(args.getJSONObject(0))) {
 					return new PluginResult(PluginResult.Status.OK, result);					

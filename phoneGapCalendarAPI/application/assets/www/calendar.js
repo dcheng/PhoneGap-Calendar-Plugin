@@ -71,11 +71,12 @@ var CalendarFindOptions = function (filter, multiple){
  * @param {DOMString} endAfter Search for Calendar Events that end after the time provided as a valid date or time string.
  */
 var CalendarEventfilter = function (startBefore, startAfter, endBefore, endAfter){
-	this.startBefore = startBefore;
-	this.startAfter = startAfter;
-	this.endBefore = endBefore;
-	this.endAfter = endAfter;
+	this.startBefore = startBefore || null;
+	this.startAfter = startAfter || null;
+	this.endBefore = endBefore || null;
+	this.endAfter = endAfter || null;
 }
+CalendarEventfilter.prototype = new CalendarEvent();
 
 
 /**

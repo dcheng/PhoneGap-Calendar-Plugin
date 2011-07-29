@@ -3,6 +3,7 @@ package com.trial.phonegap.plugin.calendar;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -41,6 +42,9 @@ import android.webkit.WebView;
  * </ul>
  */
 public class CalendarAccessorGoogle extends CalendarAccessorCreator {
+
+	
+
 
 	/**
 	 * Is a the TAG log for logging
@@ -88,6 +92,20 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 	 * Is a instance variable of Calendar used to find, save and create events into a calendar
 	 */
 	private Calendar calendar;
+	
+	 private static final List<String> dbEventCalendarList = new LinkedList<String>();
+	 static{
+		 dbEventCalendarList.add("id");
+		 dbEventCalendarList.add("description");
+		 dbEventCalendarList.add("location");
+		 dbEventCalendarList.add("summary");
+		 dbEventCalendarList.add("start");
+		 dbEventCalendarList.add("end");
+		 dbEventCalendarList.add("status");
+		 dbEventCalendarList.add("transparency");
+		 dbEventCalendarList.add("recurrence");
+		 dbEventCalendarList.add("reminder");
+	 }
 
 	/**
 	 * Constructor of CalendarAccessorGoogle
@@ -120,13 +138,14 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 		try {
 
 			JSONObject filter = options.getJSONObject("filter");
-	
+			
+			//Loggers
 			Log.i(TAG, "Date After: " + filter.getString("startAfter"));
 			Log.i(TAG, "Date Before: " + filter.getString("startBefore"));
 			Log.i(TAG, "Date After: " + filter.getString("endAfter"));
 			Log.i(TAG, "Date Before: " + filter.getString("endBefore"));
 			
-
+			//obtain date objets for finding event given by parameters
 			dateStartAfter = DateUtils.stringCalendarDateToDateGTM(filter.getString("startAfter"), "yyyy-MM-dd HH:mm:ss");
 			dateStartBefore = DateUtils.stringCalendarDateToDateGTM(filter.getString("startBefore"), "yyyy-MM-dd HH:mm:ss");
 			dateEndAfter = DateUtils.stringCalendarDateToDateGTM(filter.getString("endAfter"), "yyyy-MM-dd HH:mm:ss");
@@ -182,6 +201,8 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 			//filtered by the end of event dates
 			eventList = filterEventsByEnd(eventList, dateEndBefore, dateEndAfter);
 			
+			//Filter the events by remaining parameters.
+		
 			
 			//Finally transforms an eventList on a JSONArray
 			int i = 0;
