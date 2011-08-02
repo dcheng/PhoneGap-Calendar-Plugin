@@ -14,10 +14,16 @@
 		var startBefore = document.getElementById("input-date-start-before").value;		   
 		var endAfter = document.getElementById("input-date-end-after").value;
 		var endBefore = document.getElementById("input-date-end-before").value;	
+		var nameParameter = document.getElementById("input-name-parameter").value;	
+		var valueParameter = document.getElementById("input-value-parameter").value;	
 		
 		
 		
 		var eventFilter = new CalendarEventfilter(startBefore, startAfter, endBefore, endAfter);
+		if(nameParameter != ""){
+			eventFilter[nameParameter] = (valueParameter == "") ? null : valueParameter;
+		}
+					
 		var calendarFindOption = new CalendarFindOptions(eventFilter,true);
 		window.plugins.calendar.find(	calendarFindOption,
 										printResult,
@@ -77,6 +83,7 @@
 	Start Before Date: <input	id="input-date-start-before" type="text"> <br/>
 	End After Date: <input id="input-date-end-after" type="text">  <br/>
 	End Before Date: <input	id="input-date-end-before" type="text"> <br/>
+	<input	id="input-name-parameter" type="text"> : <input	id="input-value-parameter" type="text"> <br/>
 	<input id="list-dates"	type="button" value="find" onclick="findEvents();"/> <br/>
 	<hr>
 

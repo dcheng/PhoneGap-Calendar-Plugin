@@ -144,6 +144,7 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 			Log.i(TAG, "Date Before: " + filter.getString("startBefore"));
 			Log.i(TAG, "Date After: " + filter.getString("endAfter"));
 			Log.i(TAG, "Date Before: " + filter.getString("endBefore"));
+
 			
 			//obtain date objets for finding event given by parameters
 			dateStartAfter = DateUtils.stringCalendarDateToDateGTM(filter.getString("startAfter"), "yyyy-MM-dd HH:mm:ss");
@@ -151,6 +152,12 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 			dateEndAfter = DateUtils.stringCalendarDateToDateGTM(filter.getString("endAfter"), "yyyy-MM-dd HH:mm:ss");
 			dateEndBefore = DateUtils.stringCalendarDateToDateGTM(filter.getString("endBefore"), "yyyy-MM-dd HH:mm:ss");
 			
+			//remove date parameter from filter 
+		    filter.remove("startAfter");
+		    filter.remove("startBefore");
+		    filter.remove("endAfter");
+		    filter.remove("endBefore");
+		    
 			// Google Calendar only provides one method for searching events, dates since dateStartAfter until dateStartBefore, 
 			// so we have to configure and adapt the search with the others options, using this method
 
@@ -202,7 +209,14 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 			eventList = filterEventsByEnd(eventList, dateEndBefore, dateEndAfter);
 			
 			//Filter the events by remaining parameters.
-		
+			JSONArray names = filter.names();
+			Log.i(TAG,"Start events filtering  by remaining parameters");
+			for(int i = 0; i < names.length();i++){
+				Log.i(TAG,"Filter by " + names.getString(i) + " : " +filter.getString(names.getString(i)));
+				if (!filter.isNull(names.getString(i))){					
+					eventList = filterByParameter(eventList,names.getString(i), filter.getString(names.getString(i)));
+				}
+			}
 			
 			//Finally transforms an eventList on a JSONArray
 			int i = 0;
@@ -224,6 +238,57 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 	}
 	
 	
+	private List<Event>  filterByParameter(List<Event> eventList, String nameParameter, String valueParameter) {	
+		Log.i(TAG, "Entro en filterByParameter");
+		List<Event> eventToRemove = new ArrayList<Event>();
+		
+		for(Event event : eventList){		
+			if(!isParameterInEvent(event,nameParameter,valueParameter)){
+				eventToRemove.add(event);
+			}
+		}
+		
+		for(Event event : eventToRemove){		
+			eventList.remove(event);
+		}
+		return eventList;		
+	}
+	
+	public boolean isParameterInEvent(Event event, String nameParameter, String valueParameter){	
+		Log.i(TAG, "Entro en isParameterInEvent");
+		boolean res = false;		
+		if (nameParameter.equals("description")){
+			res = valueParameter.equals(event.getTitle());
+		}else if (nameParameter.equals("summary")){
+			res = valueParameter.equals(event.getSummary());
+		}else if (nameParameter.equals("status")){		
+			res = valueParameter.equals(event.getEventStatus());
+		}else if (nameParameter.equals("transparency")){			
+			res = valueParameter.equals(event.getTransparency());
+		}else if (nameParameter.equals("reminder")){		
+			for (When when : event.getWhen()){			
+				for(Reminder reminder : when.reminders){
+					if ((valueParameter.equals(reminder.method)) ||
+						(valueParameter.equals(String.valueOf(reminder.minutes)))) {
+						res = true;
+						break;
+					}
+				}				
+			}
+		}else if (nameParameter.equals("location")){
+			for (Where where : event.getWhere()){
+				if (valueParameter.equals(where.description)){
+					res = true;
+					break;
+				}
+			}
+		}else{
+			res = false;
+		}
+		return res;
+	 }
+
+
 	/**
 	 * this method filter the evenList given by parameter . Events whose ends are Before than dateEndBefore and After than dateEndAfter
 	 * @param eventList
