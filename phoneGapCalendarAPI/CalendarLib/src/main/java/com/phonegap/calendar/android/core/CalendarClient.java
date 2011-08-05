@@ -122,7 +122,7 @@ public class CalendarClient {
     content.originalEntry = original;
     content.patchedEntry = updated;
     HttpRequest request =
-        requestFactory.buildPatchRequest(new GenericUrl(updated.getEditLink()), content);
+        requestFactory.buildPutRequest(new GenericUrl(original.getEditLink()), content);
     return request.execute().parseAs(updated.getClass());
   }
 

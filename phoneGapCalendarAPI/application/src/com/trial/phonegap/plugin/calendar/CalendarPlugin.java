@@ -14,7 +14,7 @@ public class CalendarPlugin extends Plugin{
 	
 	private static final String ACTION_FIND = "find";
 	private static final String ACTION_SAVE = "save";
-	private static final String ACTION_DELETE = "delete";
+	private static final String ACTION_REMOVE = "remove";
 	public static CalendarAccessorCreator calendarAccessor;
 	private static final String LOG_TAG = "[Android:CalendarPlugin.java]";
 
@@ -37,9 +37,6 @@ public class CalendarPlugin extends Plugin{
 		
 		;
 		String result = "";
-		Log.i(LOG_TAG, "Plugin result OK: " + PluginResult.Status.OK );
-		Log.i(LOG_TAG, "Plugin result ERROR: " + PluginResult.Status.ERROR );
-		Log.i(LOG_TAG, "Plugin result INVALID ACTION: " + PluginResult.Status.INVALID_ACTION );
 		try{
 			if (action.equals(ACTION_FIND)) {
 				Log.d(LOG_TAG, "2 - Action service find");
@@ -50,13 +47,26 @@ public class CalendarPlugin extends Plugin{
 			}else if (action.equals(ACTION_SAVE)) {
 				Log.d(LOG_TAG, "2 - Action service save");
 				if (calendarAccessor.save(args.getJSONObject(0))) {
+					Log.d(LOG_TAG, "3 - return plugin result for service save");
 					return new PluginResult(PluginResult.Status.OK, result);					
-				}
-				else {
+				} else {
 					JSONObject r = new JSONObject();
 					r.put("code", 0);
+					Log.d(LOG_TAG, "3 - return ERROR for service save");
 					return new PluginResult(PluginResult.Status.ERROR, r);
 				}
+			}else if (action.equals(ACTION_REMOVE)){
+				Log.d(LOG_TAG, "2 - Action service remove");
+				if (calendarAccessor.remove(args.getJSONObject(0))) {
+					Log.d(LOG_TAG, "3 - return plugin result for service remove");
+					return new PluginResult(PluginResult.Status.OK, result);					
+				} else {
+					JSONObject r = new JSONObject();
+					r.put("code", 0);
+					Log.d(LOG_TAG, "3 - return ERROR for service remove");
+					return new PluginResult(PluginResult.Status.ERROR, r);
+				}
+				
 			}
 			
 			return new PluginResult(PluginResult.Status.INVALID_ACTION, result);

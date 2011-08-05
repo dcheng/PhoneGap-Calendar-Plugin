@@ -135,12 +135,12 @@ Calendar.prototype.create = function(properties) {
 */
 CalendarEvent.prototype.remove = function(successCB, errorCB) {
     if (this.id === null) {
-        var errorObj = new ContactError();
-        errorObj.code = ContactError.NOT_FOUND_ERROR;
+        var errorObj = new CalendarError();
+        errorObj.code = CalendarError.NOT_FOUND_ERROR;
         errorCB(errorObj);
     }
     else {
-        PhoneGap.exec(successCB, errorCB, "CalendarPlugin", "remove", [this.id]);
+        PhoneGap.exec(successCB, errorCB, "CalendarPlugin", "remove", [this]);
     }
 };
 

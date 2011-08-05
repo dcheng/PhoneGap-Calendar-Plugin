@@ -164,14 +164,13 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 			// if dateStartAfter is after than dateEndAfter, the search from dateStarAfter 
 			// will include all events which end be after dateEndAfter
 			if ((dateStartAfter != null) && (dateEndAfter != null) && dateStartAfter.after(dateEndAfter)){
-				Log.i(TAG, "entramos en : CHANGE dateStartAfter  after than dateEndAfter");
+				Log.i(TAG, "Flow enters in : CHANGE dateStartAfter  after than dateEndAfter");
 				dateEndAfter = null;
-			}
-			
+			}			
 			
 			// if dateStartBefore is after than dateEndbefore, we will search until dateEndBefore
 			if((dateStartBefore != null) && (dateEndBefore != null) && dateStartBefore.after(dateEndBefore)){
-				Log.i(TAG, "entramos en : CHANGE  dateStartBefore  after than dateEndBefore");
+				Log.i(TAG, "Flow enters in : CHANGE  dateStartBefore  after than dateEndBefore");
 				dateStartBefore = dateEndBefore;
 			}
 			
@@ -180,27 +179,27 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 			
 			//If dateStartAfter is after than dateStartBefore, No dates matching
 			if ((dateStartAfter != null) && (dateStartBefore != null) && dateStartAfter.after(dateStartBefore)){
-				Log.i(TAG, "entramos en : dateStartAfter  after than dateStartBefore");
+				Log.i(TAG, "Flow enters in : dateStartAfter  after than dateStartBefore");
 				return events;
 			//If dateEndAfter is after than dateEndBefore, No dates matching
 			}else if ((dateEndAfter != null) && (dateEndBefore != null) && dateEndAfter.after(dateEndBefore)){
-				Log.i(TAG, "entramos en : dateEndAfter  after than dateEndBefore");
+				Log.i(TAG, "Flow enters in : dateEndAfter  after than dateEndBefore");
 				return events;
 			//If dateStartBefore is not null then finds by dateStartBefore like dateStartBefore 
 			}else if (dateStartBefore != null){
-				Log.i(TAG, "entramos en : dateStartBefore");
+				Log.i(TAG, "Flow enters in: dateStartBefore");
 				eventList = calendar.findCalendarEventsBydate(dateStartAfter, dateStartBefore);
 			//If dateEndBefore is not null and dateStartBefore is null then finds by dateEndBefore like dateStartBefore 
 			}else if (dateEndBefore != null){
-				Log.i(TAG, "entramos en : dateEndBefore");
+				Log.i(TAG, "Flow enters in : dateEndBefore");
 				eventList = calendar.findCalendarEventsBydate(dateStartAfter, dateEndBefore);
 			// If dateEndBefore and dateStartBefore	are null, and dateStartAfter is not null the find only by this date
 			}else if (dateStartAfter != null){
-				Log.i(TAG, "entramos en : dateStartAfter");
+				Log.i(TAG, "Flow enters in : dateStartAfter");
 				eventList = calendar.findCalendarEventsBydate(dateStartAfter, dateStartBefore);
 			//Othewise return all Events	
 			} else {
-				Log.i(TAG, "entramos en : todos los eventos");
+				Log.i(TAG, "Flow enters in : Every event");
 				eventList = calendar.getCalendarAllEventsList();
 			}
 			
@@ -209,14 +208,24 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 			eventList = filterEventsByEnd(eventList, dateEndBefore, dateEndAfter);
 			
 			//Filter the events by remaining parameters.
-			JSONArray names = filter.names();
-			Log.i(TAG,"Start events filtering  by remaining parameters");
-			for(int i = 0; i < names.length();i++){
-				Log.i(TAG,"Filter by " + names.getString(i) + " : " +filter.getString(names.getString(i)));
-				if (!filter.isNull(names.getString(i))){					
-					eventList = filterByParameter(eventList,names.getString(i), filter.getString(names.getString(i)));
+			if (filter.length() != 0){
+				Log.i(TAG,"Start events filtering  by " + filter.length() + " remaining parameters");
+				
+				JSONArray names = filter.names();			
+				for(int i = 0; i < names.length();i++){
+					Log.i(TAG,"Filter by '" + names.getString(i) + "' parameter ,with value '" +filter.getString(names.getString(i)) + "'");
+					if (dbEventCalendarList.contains(names.getString(i))){
+						if (!filter.isNull(names.getString(i))){					
+							eventList = filterByParameter(eventList,names.getString(i), filter.getString(names.getString(i)));
+						}
+					}else{
+						throw new Throwable("Parameter '" + names.getString(i) + "' doesn't exist on CalendarEvent");
+					}					
 				}
+			}else{
+				Log.i(TAG,"No more remaining parameters");
 			}
+					
 			
 			//Finally transforms an eventList on a JSONArray
 			int i = 0;
@@ -225,6 +234,8 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 				events.put(eventToJsonEvent(event));
 				Log.i(TAG, "Evento [" + i + "]: " + event.getTitle());
 			}
+			
+			calendar.addEvents(eventList);
 
 		} catch (JSONException jsonException) {
 			jsonException.printStackTrace();
@@ -237,9 +248,14 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 		return events;
 	}
 	
-	
+	/**
+	 * Filters every event of a list events by the given parameter.
+	 * @param eventList The list of events to filter.
+	 * @param nameParameter String with the name of the parameter for filtering the events list.
+	 * @param valueParameter String with the parameter value. 
+	 * @return A List of events filtered
+	 */
 	private List<Event>  filterByParameter(List<Event> eventList, String nameParameter, String valueParameter) {	
-		Log.i(TAG, "Entro en filterByParameter");
 		List<Event> eventToRemove = new ArrayList<Event>();
 		
 		for(Event event : eventList){		
@@ -254,8 +270,14 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 		return eventList;		
 	}
 	
-	public boolean isParameterInEvent(Event event, String nameParameter, String valueParameter){	
-		Log.i(TAG, "Entro en isParameterInEvent");
+	/**
+	 * Returns a boolean with true value if the event given as parameter contain the value of the parameter also given as parameter
+	 * @param event Event object
+	 * @param nameParameter String with the name of the parameter to check the value into the event given.
+	 * @param valueParameter String with the value for checking in the corresponding parameter
+	 * @return A boolean 
+	 */
+	public boolean isParameterInEvent(Event event, String nameParameter, String valueParameter){		
 		boolean res = false;		
 		if (nameParameter.equals("description")){
 			res = valueParameter.equals(event.getTitle());
@@ -341,7 +363,44 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 	@Override
 	public boolean save(JSONObject jsonEvent) {
 		try {
-			calendar.createEvent(JsonEventToEvent(jsonEvent));
+			if (jsonEvent.isNull("id")){
+				calendar.createEvent(jsonEventToEvent(jsonEvent));
+			}else{
+				calendar.updateEvent(jsonEventToEvent(jsonEvent),
+									 getEventByIdIntoEventList(calendar.getEvents(), jsonEvent.getString("id")));
+			}
+			
+		} catch (JSONException jsonException) {
+			jsonException.printStackTrace();
+			return false;
+			// TODO Manage exception
+		}
+		return true;
+	}
+	
+	private Event getEventByIdIntoEventList(List<Event> listEvents, String id){
+		Event res = null;
+		for(Event event :  listEvents){
+			if (id.equals(event.getId())){
+				res = event;
+				break;
+			}
+		}
+		return res;
+	}
+	
+	@Override
+	
+	/* (non-Javadoc)
+	 *  
+	 */
+	public boolean remove(JSONObject jsonEvent) {
+		try {
+			if (jsonEvent.isNull("id")){
+				return false;
+			}else{
+				calendar.deleteEvent(jsonEventToEvent(jsonEvent));
+			}			
 		} catch (JSONException jsonException) {
 			jsonException.printStackTrace();
 			return false;
@@ -399,11 +458,14 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 	 * @return an event object with te information within JSONObject object given by parameter
 	 * @throws JSONException
 	 */
-	private Event JsonEventToEvent(JSONObject jsonEvent) throws JSONException {
+	private Event jsonEventToEvent(JSONObject jsonEvent) throws JSONException {
 
 
 		Event event = new Event();
 		
+		if(!jsonEvent.isNull("id")){
+			event.setId(jsonEvent.getString("id"));
+		}
 		
 		if (!jsonEvent.isNull("recurrence")){
 			Recurrence recurrence = new Recurrence();
@@ -847,4 +909,5 @@ public class CalendarAccessorGoogle extends CalendarAccessorCreator {
 		}
 		else return null;
 	}
+	
 }

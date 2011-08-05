@@ -34,6 +34,10 @@
 		var event = window.plugins.calendar.create(getProperties());
 		event.save(onSuccess,onError); 
 	}
+	function removeCalendarEvent(){	
+		var event = window.plugins.calendar.create(getProperties());
+		event.remove(onSuccess,onError); 
+	}
 	
 	
 	function getProperties(){
@@ -86,7 +90,7 @@
 	status: <input id="input-status" type="text">  <br/>
 	transparency: <input id="input-transparency" type="text">  <br/> 	
 	reminder: <input id="input-reminder" type="text">  <br/> 
-	<input id="button-update"	type="button" value="UPDATE" onclick="updateCalendarEvent();"/> 
+	<input id="button-update"	type="button" value="UPDATE" onclick="updateCalendarEvent();"/> 	<input id="button-remove"	type="button" value="REMOVE" onclick="removeCalendarEvent();"/> 
 	<hr> 
 
 

@@ -123,6 +123,9 @@ public abstract class CalendarAccessorCreator {
 	 */
 	public abstract boolean save(JSONObject jsonObject);
 
+
+	public abstract boolean remove(JSONObject jsonObject);
+
 	
 
 }

@@ -258,6 +258,9 @@ public class Calendar implements Cloneable{
 	 * @param events List of events will be added
 	 */
 	public void addEvents(List<Event> events){
+		if (this.events == null){
+			this.events = new ArrayList<Event>();
+		}
 		this.events.addAll(events);
 	}
 	

@@ -238,6 +238,11 @@ public class CalendarAccessorMock extends CalendarAccessorCreator{
 		return dformat.format(date);
 		
 	}
+	@Override
+	public boolean remove(JSONObject jsonObject) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 	
 
