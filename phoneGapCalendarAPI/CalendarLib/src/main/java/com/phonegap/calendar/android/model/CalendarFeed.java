@@ -12,6 +12,12 @@
  * the License.
  */
 
+
+/*
+ *  Modified by Sergio Martinez. Copyright 2011 Vodafone Group Services Ltd.
+ * 
+ */
+
 package com.phonegap.calendar.android.model;
 
 import com.google.api.client.util.Key;
